@@ -1,4 +1,4 @@
-namespace AdvertisingPortal.Models
+namespace AdvertisingPortal.Core.ViewModels
 {
     public class ErrorViewModel
     {

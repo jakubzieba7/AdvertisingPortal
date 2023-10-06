@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdvertisingPortal.Data
+namespace AdvertisingPortal.Persistence
 {
     public class ApplicationDbContext : IdentityDbContext
     {
