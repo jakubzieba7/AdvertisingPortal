@@ -1,4 +1,4 @@
-﻿using AdvertisingPortal.Models;
+﻿using AdvertisingPortal.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
