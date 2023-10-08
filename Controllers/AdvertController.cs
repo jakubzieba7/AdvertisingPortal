@@ -1,38 +1,28 @@
 ﻿using AdvertisingPortal.Core.Models.Domains;
 using AdvertisingPortal.Core.ViewModels;
+using AdvertisingPortal.Persistence.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AdvertisingPortal.Controllers
 {
     [Authorize]
     public class AdvertController : Controller
     {
+        private AdvertRepository _advertRepository;
+        private CategoryRepository _categoryRepository;
+
         public IActionResult Adverts()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var vm = new AdvertsViewModel()
             {
-                Categories = new List<Category>() 
-                { 
-                    new Category() { Id = 1, Name = "Rowery" },
-                    new Category() { Id = 2, Name = "Samochody" }
-                },
-                ItemServiceCategories = new List<ItemServiceCategory>()
-                {
-                    new ItemServiceCategory()
-                    {
-                        Id=1,Name="Rzecz"} ,
-                    new ItemServiceCategory()
-                    {
-                        Id=2,Name="Usługa"}
-                    },
-                BuySellCategories = new List<BuySellCategory>()
-                {
-                    new BuySellCategory()
-                    {Id=1,Name="Kupię" },
-                    new BuySellCategory()
-                    { Id=1,Name="Sprzedam"}
-                }
+                Adverts = _advertRepository.GetAdverts(userId),
+                Categories = _categoryRepository.GetCategories(),
+                ItemServiceCategories = _categoryRepository.GetItemServiceCategories(),
+                BuySellCategories = _categoryRepository.GetBuySellCategories()
             };
 
             return View(vm);
