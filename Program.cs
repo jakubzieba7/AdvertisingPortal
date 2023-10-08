@@ -44,7 +44,7 @@ namespace AdvertisingPortal
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Advert}/{action=Adverts}/{id?}");
             app.MapRazorPages();
 
             app.Run();
