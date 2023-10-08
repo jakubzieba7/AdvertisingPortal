@@ -41,3 +41,21 @@
     </div>
 </form>
 
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#AdvertDate').datepicker({
+                format: "dd-mm-yyyy",
+                language: "pl-PL",
+                multidate: false,
+                autoclose: true,
+                todayHighlight: true,
+                startDate: '-3d',
+                weekStart: 1,
+                todayBtn: true,
+                forceParse: false
+            });
+        });
+    </script>
+}
