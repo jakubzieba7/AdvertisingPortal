@@ -1,5 +1,6 @@
 ﻿using AdvertisingPortal.Core.Models.Domains;
 using AdvertisingPortal.Core.ViewModels;
+using AdvertisingPortal.Persistence;
 using AdvertisingPortal.Persistence.Extensions;
 using AdvertisingPortal.Persistence.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +15,11 @@ namespace AdvertisingPortal.Controllers
         private AdvertRepository _advertRepository;
         private CategoryRepository _categoryRepository;
 
+        public AdvertController(ApplicationDbContext context)
+        {
+            _advertRepository = new AdvertRepository(context);
+            _categoryRepository = new CategoryRepository(context);
+        }
         public IActionResult Adverts()
         {
             var userId = User.GetUserId();
