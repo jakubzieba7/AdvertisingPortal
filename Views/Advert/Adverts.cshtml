@@ -41,6 +41,10 @@
     </div>
 </form>
 
+<div>
+    @await Html.PartialAsync("_AdvertsTable.cshtml",Model.Adverts)
+</div>
+
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {

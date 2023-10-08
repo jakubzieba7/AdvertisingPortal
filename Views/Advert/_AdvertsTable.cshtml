@@ -1,0 +1,47 @@
+﻿@model IEnumerable<AdvertisingPortal.Core.Models.Domains.Advert>
+
+<div id="advertsTable">
+    <table class="table mt-3 table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Opis</th>
+                <th scope="col">Kategoria</th>
+                <th scope="col">Termin</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var advert in Model)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Advert","Advert",new{id=advert.Id})" class="fw-bold">@advert.Title</a>
+                        </td>
+                        <td>@advert.Description</td>
+                        <td>@advert.Category.Name</td>
+                        <td>@advert.AdvertDate.ToString("dd-MM-yyyy")</td>
+                        <td>
+                            @if (!advert.IsExisting)
+                            {
+                                <b>Aktywne</b>
+                            }
+                        </td>
+                        @* <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAdvert('@advert.Id',this)">Usuń</button>
+                        </td> *@
+                    </tr>
+
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="5">Brak ogłoszeń do wyświetlenia!</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
