@@ -1,5 +1,6 @@
 ﻿using AdvertisingPortal.Core.Models.Domains;
 using AdvertisingPortal.Core.ViewModels;
+using AdvertisingPortal.Persistence.Extensions;
 using AdvertisingPortal.Persistence.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace AdvertisingPortal.Controllers
 
         public IActionResult Adverts()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.GetUserId();
 
             var vm = new AdvertsViewModel()
             {
