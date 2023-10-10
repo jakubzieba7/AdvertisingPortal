@@ -16,6 +16,8 @@ namespace AdvertisingPortal.Core.Models.Domains
         [Required(ErrorMessage = "Pole kategoria jest wymagane.")]
         [Display(Name = "Kategoria")]
         public int CategoryId { get; set; }
+        public int BuySellCategoryId { get; set; }
+        public int ItemServiceCategoryId { get; set; }
         [Display(Name = "Zrealizowane")]
         public bool IsExisting { get; set; }
         public bool IsPromoted { get; set; }

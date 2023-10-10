@@ -19,5 +19,23 @@ namespace AdvertisingPortal.Persistence.Repositories
         {
             return _context.Adverts.Single(x => x.Id == id && x.UserId == userId);
         }
+
+        public void Add(Advert advert)
+        {
+            _context.Adverts.Add(advert);
+        }
+
+        public void Update(Advert advert)
+        {
+            var advertToUpdate = _context.Adverts.Single(x => x.Id == advert.Id && x.UserId == advert.UserId);
+
+            advertToUpdate.Title = advert.Title;
+            advertToUpdate.Description = advert.Description;
+            advertToUpdate.ItemServiceCategoryId = advert.ItemServiceCategoryId;
+            advertToUpdate.BuySellCategoryId = advert.BuySellCategoryId;
+            advertToUpdate.CategoryId = advert.CategoryId;
+            advertToUpdate.IsExisting = advert.IsExisting;
+            advertToUpdate.IsPromoted = advert.IsPromoted;
+        }
     }
 }

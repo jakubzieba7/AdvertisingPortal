@@ -51,5 +51,34 @@ namespace AdvertisingPortal.Controllers
 
             return View(vm);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Advert(Advert advert)
+        {
+            var userId = User.GetUserId();
+            advert.UserId = userId;
+
+            if (!ModelState.IsValid)
+            {
+                var vm = new AdvertViewModel
+                {
+                    Advert = advert,
+                    Categories = _categoryRepository.GetCategories(),
+                    BuySellCategories = _categoryRepository.GetBuySellCategories(),
+                    ItemServiceCategories = _categoryRepository.GetItemServiceCategories(),
+                    Heading = advert.Id == 0 ? "Dodawanie nowego ogłoszenia" : "Edytowanie ogłoszenia"
+                };
+
+                return View("Advert", vm);
+            }
+
+            if (advert.Id == 0)
+                _advertRepository.Add(advert);
+            else
+                _advertRepository.Update(advert);
+
+            return RedirectToAction("Adverts");
+        }
     }
 }
