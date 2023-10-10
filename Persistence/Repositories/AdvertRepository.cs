@@ -14,5 +14,10 @@ namespace AdvertisingPortal.Persistence.Repositories
         {
             return _context.Adverts.Where(x => x.UserId == userId).ToList();
         }
+
+        public Advert GetAdvert(int id, string userId)
+        {
+            return _context.Adverts.Single(x => x.Id == id && x.UserId == userId);
+        }
     }
 }

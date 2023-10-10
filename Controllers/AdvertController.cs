@@ -34,5 +34,22 @@ namespace AdvertisingPortal.Controllers
 
             return View(vm);
         }
+
+        public IActionResult Advert(int id = 0)
+        {
+            var userId = User.GetUserId();
+            var advert = id == 0 ? new Advert { Id = 0, UserId = userId, AdvertDate = DateTime.Now } : _advertRepository.GetAdvert(id, userId);
+
+            var vm = new AdvertViewModel()
+            {
+                Heading = id == 0 ? "Dodawanie nowego ogłoszenia" : "Edycja ogłoszenia",
+                Advert = advert,
+                Categories = _categoryRepository.GetCategories(),
+                BuySellCategories = _categoryRepository.GetBuySellCategories(),
+                ItemServiceCategories = _categoryRepository.GetItemServiceCategories()
+            };
+
+            return View(vm);
+        }
     }
 }
