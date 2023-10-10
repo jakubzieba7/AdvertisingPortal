@@ -10,19 +10,19 @@ namespace AdvertisingPortal.Persistence.Repositories
         {
             _context = context;
         }
-        internal IEnumerable<BuySellCategory> GetBuySellCategories()
+        public IEnumerable<BuySellCategory> GetBuySellCategories()
         {
-            throw new NotImplementedException();
+            return _context.BuySellCategories.ToList();
         }
 
-        internal IEnumerable<Category> GetCategories()
+        public IEnumerable<Category> GetCategories()
         {
-            throw new NotImplementedException();
+            return _context.Categories.ToList();
         }
 
-        internal IEnumerable<ItemServiceCategory> GetItemServiceCategories()
+        public IEnumerable<ItemServiceCategory> GetItemServiceCategories()
         {
-            throw new NotImplementedException();
+            return _context.ItemServiceCategories.ToList();
         }
     }
 }

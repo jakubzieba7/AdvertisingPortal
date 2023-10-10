@@ -10,9 +10,9 @@ namespace AdvertisingPortal.Persistence.Repositories
             _context = context;
         }
 
-        internal IEnumerable<Advert> GetAdverts(string userId)
+        public IEnumerable<Advert> GetAdverts(string userId)
         {
-            throw new NotImplementedException();
+            return _context.Adverts.Where(x => x.UserId == userId).ToList();
         }
     }
 }
