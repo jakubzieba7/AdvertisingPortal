@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AdvertisingPortal.Persistence.Migrations
+namespace AdvertisingPortal.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -48,6 +48,46 @@ namespace AdvertisingPortal.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BuySellCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BuySellCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Lp = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItemServiceCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemServiceCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -165,12 +205,12 @@ namespace AdvertisingPortal.Persistence.Migrations
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    IsExisting = table.Column<bool>(type: "bit", nullable: false),
+                    BuySellCategoryId = table.Column<int>(type: "int", nullable: false),
+                    ItemServiceCategoryId = table.Column<int>(type: "int", nullable: false),
+                    IsFinished = table.Column<bool>(type: "bit", nullable: false),
                     IsPromoted = table.Column<bool>(type: "bit", nullable: false),
                     AdvertDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    BuySellCategoryId = table.Column<int>(type: "int", nullable: true),
-                    ItemServiceCategoryId = table.Column<int>(type: "int", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -180,68 +220,24 @@ namespace AdvertisingPortal.Persistence.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BuySellCategories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BuySellCategories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Categories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Lp = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CategoryBuySellId = table.Column<int>(type: "int", nullable: false),
-                    CategoryItemServiceId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Categories_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Categories_BuySellCategories_CategoryBuySellId",
-                        column: x => x.CategoryBuySellId,
+                        name: "FK_Adverts_BuySellCategories_BuySellCategoryId",
+                        column: x => x.BuySellCategoryId,
                         principalTable: "BuySellCategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ItemServiceCategories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ItemServiceCategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ItemServiceCategories_Categories_CategoryId",
+                        name: "FK_Adverts_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Adverts_ItemServiceCategories_ItemServiceCategoryId",
+                        column: x => x.ItemServiceCategoryId,
+                        principalTable: "ItemServiceCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -302,85 +298,11 @@ namespace AdvertisingPortal.Persistence.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BuySellCategories_CategoryId",
-                table: "BuySellCategories",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Categories_CategoryBuySellId",
-                table: "Categories",
-                column: "CategoryBuySellId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Categories_CategoryItemServiceId",
-                table: "Categories",
-                column: "CategoryItemServiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Categories_UserId",
-                table: "Categories",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ItemServiceCategories_CategoryId",
-                table: "ItemServiceCategories",
-                column: "CategoryId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Adverts_BuySellCategories_BuySellCategoryId",
-                table: "Adverts",
-                column: "BuySellCategoryId",
-                principalTable: "BuySellCategories",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Adverts_Categories_CategoryId",
-                table: "Adverts",
-                column: "CategoryId",
-                principalTable: "Categories",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Adverts_ItemServiceCategories_ItemServiceCategoryId",
-                table: "Adverts",
-                column: "ItemServiceCategoryId",
-                principalTable: "ItemServiceCategories",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_BuySellCategories_Categories_CategoryId",
-                table: "BuySellCategories",
-                column: "CategoryId",
-                principalTable: "Categories",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Categories_ItemServiceCategories_CategoryItemServiceId",
-                table: "Categories",
-                column: "CategoryItemServiceId",
-                principalTable: "ItemServiceCategories",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Categories_AspNetUsers_UserId",
-                table: "Categories");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Categories_BuySellCategories_CategoryBuySellId",
-                table: "Categories");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ItemServiceCategories_Categories_CategoryId",
-                table: "ItemServiceCategories");
-
             migrationBuilder.DropTable(
                 name: "Adverts");
 
@@ -400,12 +322,6 @@ namespace AdvertisingPortal.Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "BuySellCategories");
 
             migrationBuilder.DropTable(
@@ -413,6 +329,12 @@ namespace AdvertisingPortal.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ItemServiceCategories");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

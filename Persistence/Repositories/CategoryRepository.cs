@@ -17,7 +17,7 @@ namespace AdvertisingPortal.Persistence.Repositories
 
         public IEnumerable<Category> GetCategories()
         {
-            return _context.Categories.ToList();
+            return _context.Categories.OrderBy(x=>x.Name).ToList();
         }
 
         public IEnumerable<ItemServiceCategory> GetItemServiceCategories()

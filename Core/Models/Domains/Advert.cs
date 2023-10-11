@@ -14,14 +14,17 @@ namespace AdvertisingPortal.Core.Models.Domains
         [Display(Name = "Opis")]
         public string Description { get; set; }
         [Required(ErrorMessage = "Pole kategoria jest wymagane.")]
-        [Display(Name = "Kategoria")]
+        [Display(Name = "Kategoria 3")]
         public int CategoryId { get; set; }
+        [Display(Name = "Kategoria 1")]
         public int BuySellCategoryId { get; set; }
+        [Display(Name = "Kategoria 2")]
         public int ItemServiceCategoryId { get; set; }
-        [Display(Name = "Zrealizowane")]
-        public bool IsExisting { get; set; }
+        [Display(Name = "Zakończone")]
+        public bool IsFinished { get; set; }
+        [Display(Name = "Promowane")]
         public bool IsPromoted { get; set; }
-        [Display(Name = "Termin")]
+        [Display(Name = "Data publikacji")]
         public DateTime AdvertDate { get; set; }
         public string UserId { get; set; }
         public BuySellCategory BuySellCategory { get; set; }

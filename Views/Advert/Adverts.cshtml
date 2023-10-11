@@ -1,10 +1,10 @@
 ﻿@model AdvertisingPortal.Core.ViewModels.AdvertsViewModel
 
 @{
-            // ViewData["Title"] = "Adverts";
+    ViewData["Title"] = "Ogłoszenia";
 }
 
-<h1>Adverts</h1>
+<h1>Ogłoszenia</h1>
 
 <form id="filterForm" class="row gx-3 gy-2 align-items-center">
     <div class="col-sm-3">
@@ -30,10 +30,10 @@
     </div>
     <div class="col-sm-3">
         <div class="form-check mb-2">
-            @Html.CheckBoxFor(x => x.FilterAdverts.IsExisting,
+            @Html.CheckBoxFor(x => x.FilterAdverts.IsFinished,
             new { @class = "form-check-label" })
 
-            @Html.LabelFor(x => x.FilterAdverts.IsExisting)
+            @Html.LabelFor(x => x.FilterAdverts.IsFinished)
         </div>
     </div>
     <div class="col-auto">

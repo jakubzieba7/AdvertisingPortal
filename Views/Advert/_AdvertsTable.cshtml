@@ -6,8 +6,10 @@
             <tr>
                 <th scope="col">Tytuł</th>
                 <th scope="col">Opis</th>
-                <th scope="col">Kategoria</th>
-                <th scope="col">Termin</th>
+                <th scope="col">Kategoria 1</th>
+                <th scope="col">Kategoria 2</th>
+                <th scope="col">Kategoria 3</th>
+                <th scope="col">Data publikacji</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -21,10 +23,12 @@
                             <a href="@Url.Action("Advert","Advert",new{id=advert.Id})" class="fw-bold">@advert.Title</a>
                         </td>
                         <td>@advert.Description</td>
+                        <td>@advert.BuySellCategory.Name</td>
+                        <td>@advert.ItemServiceCategory.Name</td>
                         <td>@advert.Category.Name</td>
                         <td>@advert.AdvertDate.ToString("dd-MM-yyyy")</td>
                         <td>
-                            @if (!advert.IsExisting)
+                            @if (!advert.IsFinished)
                             {
                                 <b>Aktywne</b>
                             }

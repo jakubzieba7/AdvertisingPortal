@@ -80,5 +80,16 @@ namespace AdvertisingPortal.Controllers
 
             return RedirectToAction("Adverts");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Adverts(AdvertsViewModel viewModel)
+        {
+            var userId = User.GetUserId();
+
+            var adverts = _advertRepository.GetAdverts(userId, viewModel.FilterAdverts.Title, viewModel.FilterAdverts.CategoryId, viewModel.FilterAdverts.BuySellCategoryId, viewModel.FilterAdverts.ItemServiceCategoryId, viewModel.FilterAdverts.IsFinished);
+
+            return PartialView("_AdvertsTable", adverts);
+        }
     }
 }

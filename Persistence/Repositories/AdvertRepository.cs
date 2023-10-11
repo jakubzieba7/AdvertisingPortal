@@ -1,4 +1,6 @@
-﻿using AdvertisingPortal.Core.Models.Domains;
+﻿using AdvertisingPortal.Core.Models;
+using AdvertisingPortal.Core.Models.Domains;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdvertisingPortal.Persistence.Repositories
 {
@@ -10,9 +12,31 @@ namespace AdvertisingPortal.Persistence.Repositories
             _context = context;
         }
 
-        public IEnumerable<Advert> GetAdverts(string userId)
+        public IEnumerable<Advert> GetAdverts(string userId, string title = null, int categoryId = 0, int buySellCategoryId = 0, int itemServiceCategoryId = 0, bool IsFinished = false)
         {
-            return _context.Adverts.Where(x => x.UserId == userId).ToList();
+            var adverts = _context.Adverts.
+                Include(x => x.Category).
+                Include(x => x.BuySellCategory).
+                Include(x => x.ItemServiceCategory).
+                Where(x => x.UserId == userId && x.IsFinished == IsFinished);
+
+            if (buySellCategoryId == 1)
+                adverts = adverts.Where(x => x.BuySellCategoryId == 1);
+            else
+                adverts = adverts.Where(x => x.BuySellCategoryId == 2);
+
+            if (itemServiceCategoryId == 1)
+                adverts = adverts.Where(x => x.ItemServiceCategoryId == 1);
+            else
+                adverts = adverts.Where(x => x.ItemServiceCategoryId == 2);
+
+            if (categoryId != 0)
+                adverts = adverts.Where(x => x.CategoryId == categoryId);
+
+            if (!string.IsNullOrWhiteSpace(title))
+                adverts = adverts.Where(x => x.Title.Contains(title));
+
+            return adverts.OrderBy(x => x.AdvertDate).ToList();
         }
 
         public Advert GetAdvert(int id, string userId)
@@ -23,6 +47,7 @@ namespace AdvertisingPortal.Persistence.Repositories
         public void Add(Advert advert)
         {
             _context.Adverts.Add(advert);
+            _context.SaveChanges();
         }
 
         public void Update(Advert advert)
@@ -34,8 +59,10 @@ namespace AdvertisingPortal.Persistence.Repositories
             advertToUpdate.ItemServiceCategoryId = advert.ItemServiceCategoryId;
             advertToUpdate.BuySellCategoryId = advert.BuySellCategoryId;
             advertToUpdate.CategoryId = advert.CategoryId;
-            advertToUpdate.IsExisting = advert.IsExisting;
+            advertToUpdate.IsFinished = advert.IsFinished;
             advertToUpdate.IsPromoted = advert.IsPromoted;
+
+            _context.SaveChanges();
         }
     }
 }

@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AdvertisingPortal.Persistence.Migrations
+namespace AdvertisingPortal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231007111750_Init")]
+    [Migration("20231011084149_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -36,7 +36,7 @@ namespace AdvertisingPortal.Persistence.Migrations
                     b.Property<DateTime>("AdvertDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("BuySellCategoryId")
+                    b.Property<int>("BuySellCategoryId")
                         .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
@@ -47,13 +47,13 @@ namespace AdvertisingPortal.Persistence.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<bool>("IsExisting")
+                    b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsPromoted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ItemServiceCategoryId")
+                    b.Property<int>("ItemServiceCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -150,17 +150,12 @@ namespace AdvertisingPortal.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("BuySellCategories");
                 });
@@ -173,12 +168,6 @@ namespace AdvertisingPortal.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryBuySellId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryItemServiceId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Lp")
                         .HasColumnType("int");
 
@@ -187,17 +176,7 @@ namespace AdvertisingPortal.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryBuySellId");
-
-                    b.HasIndex("CategoryItemServiceId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Categories");
                 });
@@ -210,17 +189,12 @@ namespace AdvertisingPortal.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("ItemServiceCategories");
                 });
@@ -366,7 +340,9 @@ namespace AdvertisingPortal.Persistence.Migrations
                 {
                     b.HasOne("AdvertisingPortal.Core.Models.Domains.BuySellCategory", "BuySellCategory")
                         .WithMany("Adverts")
-                        .HasForeignKey("BuySellCategoryId");
+                        .HasForeignKey("BuySellCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AdvertisingPortal.Core.Models.Domains.Category", "Category")
                         .WithMany("Adverts")
@@ -376,7 +352,9 @@ namespace AdvertisingPortal.Persistence.Migrations
 
                     b.HasOne("AdvertisingPortal.Core.Models.Domains.ItemServiceCategory", "ItemServiceCategory")
                         .WithMany("Adverts")
-                        .HasForeignKey("ItemServiceCategoryId");
+                        .HasForeignKey("ItemServiceCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AdvertisingPortal.Core.Models.Domains.ApplicationUser", "User")
                         .WithMany("Adverts")
@@ -389,47 +367,6 @@ namespace AdvertisingPortal.Persistence.Migrations
                     b.Navigation("ItemServiceCategory");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AdvertisingPortal.Core.Models.Domains.BuySellCategory", b =>
-                {
-                    b.HasOne("AdvertisingPortal.Core.Models.Domains.Category", null)
-                        .WithMany("BuySellCategories")
-                        .HasForeignKey("CategoryId");
-                });
-
-            modelBuilder.Entity("AdvertisingPortal.Core.Models.Domains.Category", b =>
-                {
-                    b.HasOne("AdvertisingPortal.Core.Models.Domains.BuySellCategory", "CategoryBuySell")
-                        .WithMany()
-                        .HasForeignKey("CategoryBuySellId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AdvertisingPortal.Core.Models.Domains.ItemServiceCategory", "CategoryItemService")
-                        .WithMany()
-                        .HasForeignKey("CategoryItemServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AdvertisingPortal.Core.Models.Domains.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CategoryBuySell");
-
-                    b.Navigation("CategoryItemService");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AdvertisingPortal.Core.Models.Domains.ItemServiceCategory", b =>
-                {
-                    b.HasOne("AdvertisingPortal.Core.Models.Domains.Category", null)
-                        .WithMany("ItemServiceCategories")
-                        .HasForeignKey("CategoryId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -496,10 +433,6 @@ namespace AdvertisingPortal.Persistence.Migrations
             modelBuilder.Entity("AdvertisingPortal.Core.Models.Domains.Category", b =>
                 {
                     b.Navigation("Adverts");
-
-                    b.Navigation("BuySellCategories");
-
-                    b.Navigation("ItemServiceCategories");
                 });
 
             modelBuilder.Entity("AdvertisingPortal.Core.Models.Domains.ItemServiceCategory", b =>
