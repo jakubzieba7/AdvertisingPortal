@@ -1,4 +1,5 @@
-﻿using AdvertisingPortal.Core.Models.Domains;
+﻿using AdvertisingPortal.Core.Models;
+using AdvertisingPortal.Core.Models.Domains;
 using AdvertisingPortal.Core.ViewModels;
 using AdvertisingPortal.Persistence;
 using AdvertisingPortal.Persistence.Extensions;
@@ -29,7 +30,8 @@ namespace AdvertisingPortal.Controllers
                 Adverts = _advertRepository.GetAdverts(userId),
                 Categories = _categoryRepository.GetCategories(),
                 ItemServiceCategories = _categoryRepository.GetItemServiceCategories(),
-                BuySellCategories = _categoryRepository.GetBuySellCategories()
+                BuySellCategories = _categoryRepository.GetBuySellCategories(),
+                FilterAdverts = new FilterAdverts()
             };
 
             return View(vm);

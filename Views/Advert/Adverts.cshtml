@@ -4,7 +4,7 @@
     ViewData["Title"] = "Ogłoszenia";
 }
 
-<h1>Ogłoszenia</h1>
+<h1>Moje ogłoszenia</h1>
 
 <form id="filterForm" class="row gx-3 gy-2 align-items-center">
     <div class="col-sm-3">
@@ -47,19 +47,80 @@
 
 @section scripts{
     <script type="text/javascript">
+        
         $(document).ready(function () {
 
-            $('#AdvertDate').datepicker({
-                format: "dd-mm-yyyy",
-                language: "pl-PL",
-                multidate: false,
-                autoclose: true,
-                todayHighlight: true,
-                startDate: '-3d',
-                weekStart: 1,
-                todayBtn: true,
-                forceParse: false
+            $('#filterForm').submit(function () {
+
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("Adverts","Advert")",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        $('#advertsTable').html(data);
+                    },
+                    error: function (data) {
+                        alert(data.message+'ale błąd');
+                    },
+                    dataType: 'html'
+                });
+
+                return false;
             });
         });
+
+        function deleteAdvert(id, btn) {
+            if (!confirm("Czy na pewno chcesz usunąć ogłoszenie?"))
+                return;
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("Delete","Advert")",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    }
+                    else {
+                        alert(data.message);
+                    }
+
+                },
+                error: function (data) {
+                    alert(data.message);
+                },
+                dataType: 'json'
+            });
+        }
+
+        function finishAdvert(id, btn) {
+            if (!confirm("Czy na pewno chcesz oznaczyć ogłoszenie jako nieaktywne?"))
+                return;
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("Finish","Advert")",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    }
+                    else {
+                        alert(data.message);
+                    }
+
+                },
+                error: function (data) {
+                    alert(data.message);
+                },
+                dataType: 'json'
+            });
+        }
     </script>
 }

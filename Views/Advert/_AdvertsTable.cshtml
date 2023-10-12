@@ -10,7 +10,7 @@
                 <th scope="col">Kategoria 2</th>
                 <th scope="col">Kategoria 3</th>
                 <th scope="col">Data publikacji</th>
-                <th scope="col"></th>
+                <th scope="col">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -30,12 +30,12 @@
                         <td>
                             @if (!advert.IsFinished)
                             {
-                                <b>Aktywne</b>
+                                <b class="text-success">Aktywne</b>
                             }
                         </td>
-                        @* <td>
+                         <td>
                             <button class="btn btn-danger btn-sm" onclick="deleteAdvert('@advert.Id',this)">Usuń</button>
-                        </td> *@
+                        </td> 
                     </tr>
 
                 }

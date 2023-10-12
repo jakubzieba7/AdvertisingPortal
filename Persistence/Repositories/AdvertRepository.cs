@@ -20,15 +20,11 @@ namespace AdvertisingPortal.Persistence.Repositories
                 Include(x => x.ItemServiceCategory).
                 Where(x => x.UserId == userId && x.IsFinished == IsFinished);
 
-            if (buySellCategoryId == 1)
-                adverts = adverts.Where(x => x.BuySellCategoryId == 1);
-            else
-                adverts = adverts.Where(x => x.BuySellCategoryId == 2);
+            if (buySellCategoryId != 0)
+                adverts = adverts.Where(x => x.BuySellCategoryId == buySellCategoryId);
 
-            if (itemServiceCategoryId == 1)
-                adverts = adverts.Where(x => x.ItemServiceCategoryId == 1);
-            else
-                adverts = adverts.Where(x => x.ItemServiceCategoryId == 2);
+            if (itemServiceCategoryId != 0)
+                adverts = adverts.Where(x => x.ItemServiceCategoryId == itemServiceCategoryId);
 
             if (categoryId != 0)
                 adverts = adverts.Where(x => x.CategoryId == categoryId);

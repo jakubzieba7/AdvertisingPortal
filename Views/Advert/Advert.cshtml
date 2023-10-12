@@ -30,8 +30,22 @@
 
     <div class="form-group">
 
+        @Html.LabelFor(x=>x.Advert.BuySellCategoryId)
+        @Html.DropDownListFor(x=>x.Advert.BuySellCategoryId,new SelectList(Model.BuySellCategories,"Id","Name"),"-- wybierz kategorię 1 --", new{@class="form-control"})
+        @Html.ValidationMessageFor(x=>x.Advert.BuySellCategoryId)
+    </div>
+
+    <div class="form-group">
+
+        @Html.LabelFor(x=>x.Advert.ItemServiceCategoryId)
+        @Html.DropDownListFor(x=>x.Advert.ItemServiceCategoryId,new SelectList(Model.ItemServiceCategories,"Id","Name"),"-- wybierz kategorię 2 --", new{@class="form-control"})
+        @Html.ValidationMessageFor(x=>x.Advert.ItemServiceCategoryId)
+    </div>
+
+    <div class="form-group">
+
         @Html.LabelFor(x=>x.Advert.CategoryId)
-        @Html.DropDownListFor(x=>x.Advert.CategoryId,new SelectList(Model.Categories,"Id","Name"),"-- wybierz kategorię --", new{@class="form-control"})
+        @Html.DropDownListFor(x=>x.Advert.CategoryId,new SelectList(Model.Categories,"Id","Name"),"-- wybierz kategorię 3 --", new{@class="form-control"})
         @Html.ValidationMessageFor(x=>x.Advert.CategoryId)
     </div>
 
@@ -40,6 +54,11 @@
         @Html.LabelFor(x=>x.Advert.AdvertDate)
         @Html.TextBoxFor(x=>x.Advert.AdvertDate,"{0:dd-MM-yyyy}",new{@class="form-control", @id="AdvertDate", autocomplete="off"})
         @Html.ValidationMessageFor(x=>x.Advert.AdvertDate)
+    </div>
+
+    <div class="form-check">
+        @Html.CheckBoxFor(x=>x.Advert.IsPromoted,new {@class="form-check-input"})
+        @Html.LabelFor(x=>x.Advert.IsPromoted)
     </div>
 
     if (Model.Advert.Id > 0)
