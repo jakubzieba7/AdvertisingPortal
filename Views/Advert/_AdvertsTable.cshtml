@@ -32,10 +32,14 @@
                             {
                                 <b class="text-success">Aktywne</b>
                             }
+                            else
+                            {
+                                <b class="text-danger">Zakończone</b>
+                            }
                         </td>
-                         <td>
+                        <td>
                             <button class="btn btn-danger btn-sm" onclick="deleteAdvert('@advert.Id',this)">Usuń</button>
-                        </td> 
+                        </td>
                     </tr>
 
                 }
@@ -43,7 +47,7 @@
             else
             {
                 <tr>
-                    <td class="text-center" colspan="5">Brak ogłoszeń do wyświetlenia!</td>
+                    <td class="text-center" colspan="7">Brak ogłoszeń do wyświetlenia!</td>
                 </tr>
             }
         </tbody>

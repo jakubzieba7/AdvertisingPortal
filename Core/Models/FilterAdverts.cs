@@ -10,5 +10,7 @@ namespace AdvertisingPortal.Core.Models
         public int ItemServiceCategoryId { get; set; }
         [Display(Name = "Zakończone")]
         public bool IsFinished { get; set; }
+        [Display(Name = "Promowane")]
+        public bool IsPromoted { get; set; }
     }
 }
