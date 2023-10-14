@@ -88,7 +88,7 @@ namespace AdvertisingPortal.Controllers
         {
             var userId = User.GetUserId();
 
-            var adverts = _advertRepository.GetAdverts(userId, viewModel.FilterAdverts.Title, viewModel.FilterAdverts.CategoryId, viewModel.FilterAdverts.BuySellCategoryId, viewModel.FilterAdverts.ItemServiceCategoryId, viewModel.FilterAdverts.IsFinished, viewModel.FilterAdverts.IsPromoted);
+            var adverts = _advertRepository.GetAdverts(userId, viewModel.FilterAdverts.Title, viewModel.FilterAdverts.CategoryId, viewModel.FilterAdverts.BuySellCategoryId, viewModel.FilterAdverts.ItemServiceCategoryId, viewModel.FilterAdverts.PriceMin.Value, viewModel.FilterAdverts.PriceMax.Value, viewModel.FilterAdverts.IsFinished, viewModel.FilterAdverts.IsPromoted);
 
             return PartialView("_AdvertsTable", adverts);
         }

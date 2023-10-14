@@ -30,6 +30,14 @@
             new { @class = "form-control mb-2" })
         </div>
         <div class="col-sm-3">
+            @Html.TextBoxFor(x => x.FilterAdverts.PriceMin, 
+                new { @class = "form-control mb-2", placeholder = "Cena min" })
+        </div>
+        <div class="col-sm-3">
+            @Html.TextBoxFor(x => x.FilterAdverts.PriceMax, 
+                new { @class = "form-control mb-2", placeholder = Html.DisplayNameFor(m => m.FilterAdverts.PriceMax) })
+        </div>
+        <div class="col-sm-2">
             <div class="form-check mb-2">
                 @Html.CheckBoxFor(x => x.FilterAdverts.IsFinished,
                 new { @class = "form-check-label" })
@@ -37,7 +45,7 @@
                 @Html.LabelFor(x => x.FilterAdverts.IsFinished)
             </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <div class="form-check mb-2">
                 @Html.CheckBoxFor(x => x.FilterAdverts.IsPromoted,
                 new { @class = "form-check-label" })
@@ -46,7 +54,7 @@
             </div>
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-primary">Szukaj</button>
+            <button type="submit" class="btn btn-primary mb-5">Szukaj</button>
         </div>
     </div>
 </form>

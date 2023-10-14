@@ -16,8 +16,10 @@ namespace AdvertisingPortal.Core.Models.Domains
         [Required(ErrorMessage = "Pole kategoria jest wymagane.")]
         [Display(Name = "Kategoria 3")]
         public int CategoryId { get; set; }
+        [Required(ErrorMessage = "Pole kategoria jest wymagane.")]
         [Display(Name = "Kategoria 1")]
         public int BuySellCategoryId { get; set; }
+        [Required(ErrorMessage = "Pole kategoria jest wymagane.")]
         [Display(Name = "Kategoria 2")]
         public int ItemServiceCategoryId { get; set; }
         [Display(Name = "Zakończone")]
@@ -31,5 +33,8 @@ namespace AdvertisingPortal.Core.Models.Domains
         public ItemServiceCategory ItemServiceCategory { get; set; }
         public Category Category { get; set; }
         public ApplicationUser User { get; set; }
+        [Required(ErrorMessage = "Pole cena jest wymagane.")]
+        [Display(Name ="Cena")]
+        public decimal Price { get; set; }
     }
 }

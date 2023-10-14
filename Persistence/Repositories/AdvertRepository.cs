@@ -12,7 +12,7 @@ namespace AdvertisingPortal.Persistence.Repositories
             _context = context;
         }
 
-        public IEnumerable<Advert> GetAdverts(string userId, string title = null, int categoryId = 0, int buySellCategoryId = 0, int itemServiceCategoryId = 0, bool IsFinished = false, bool isPromoted = false)
+        public IEnumerable<Advert> GetAdverts(string userId, string title = null, int categoryId = 0, int buySellCategoryId = 0, int itemServiceCategoryId = 0, decimal priceMin = 0, decimal priceMax = 0, bool IsFinished = false, bool isPromoted = false)
         {
             var adverts = _context.Adverts.
                 Include(x => x.Category).
@@ -34,6 +34,12 @@ namespace AdvertisingPortal.Persistence.Repositories
 
             if (!string.IsNullOrWhiteSpace(title))
                 adverts = adverts.Where(x => x.Title.Contains(title));
+
+            if (priceMin != 0)
+                adverts = adverts.Where(x => x.Price >= priceMin);
+
+            if (priceMax != 0)
+                adverts=adverts.Where(x => x.Price <= priceMax);
 
             return adverts.OrderBy(x => x.AdvertDate).ToList();
         }
@@ -60,6 +66,7 @@ namespace AdvertisingPortal.Persistence.Repositories
             advertToUpdate.CategoryId = advert.CategoryId;
             advertToUpdate.IsFinished = advert.IsFinished;
             advertToUpdate.IsPromoted = advert.IsPromoted;
+            advertToUpdate.Price = advert.Price;
 
             _context.SaveChanges();
         }

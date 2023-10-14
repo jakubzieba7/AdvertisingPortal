@@ -10,6 +10,7 @@
                 <th scope="col">Kategoria 2</th>
                 <th scope="col">Kategoria 3</th>
                 <th scope="col">Data publikacji</th>
+                <th scope="col">Cena</th>
                 <th scope="col">Status</th>
             </tr>
         </thead>
@@ -27,6 +28,7 @@
                         <td>@advert.ItemServiceCategory.Name</td>
                         <td>@advert.Category.Name</td>
                         <td>@advert.AdvertDate.ToString("dd-MM-yyyy")</td>
+                        <td>@advert.Price zł</td>
                         <td>
                             @if (!advert.IsFinished)
                             {
