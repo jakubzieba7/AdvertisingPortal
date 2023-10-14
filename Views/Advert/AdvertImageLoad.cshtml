@@ -1,0 +1,46 @@
+﻿@model AdvertisingPortal.Core.ViewModels.AdvertImagesViewModel
+
+@{
+    ViewBag.Title = Model.Heading;
+}
+
+<h1>@Model.Heading</h1>
+
+
+@using (Html.BeginForm("UploadImage", "Advert", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.Image.AdvertId)
+
+    <div class="input-group mt-5">
+        <input type="file"
+               class="form-control"
+               id="inputGroupFile04"
+               aria-describedby="inputGroupFileAddon"
+               aria-label="Upload"
+               name="file"
+               multiple="multiple">
+        <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon" onclick='window.location.href=" @Url.Action("UploadImage","Advert")"'>Załaduj do ogłoszenia</button>
+    </div>
+
+    <div class="mt-5">
+        @Html.TextBoxFor(x => x.Image.Data, new { type = "file", id = "image", name = "images", @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Image.Data)
+    </div>
+
+    <button class="btn btn-primary btn-lg mt-5 mb-3" type="submit" disabled>Załaduj do ogłoszenia</button>
+}
+
+<button class="btn btn-secondary btn-lg mb-5" onclick='window.location.href="@Url.Action("Advert","Advert", new {advert=Model.Advert})"'>Wróć</button>
+
+@section Scripts
+    {
+    <script type="text/javascript">
+
+        jQuery('#image').on('input propertychange paste', function () {
+            $('button').prop('disabled', false);
+        });
+
+    </script>
+}

@@ -6,6 +6,7 @@ using AdvertisingPortal.Persistence.Extensions;
 using AdvertisingPortal.Persistence.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
 using System.Security.Claims;
 
 namespace AdvertisingPortal.Controllers
@@ -52,6 +53,14 @@ namespace AdvertisingPortal.Controllers
             };
 
             return View(vm);
+        }
+
+        public IActionResult UploadImage(int advertId, int imageId = 0)
+        {
+            var advertImage = new Image() { Id = imageId, AdvertId = advertId };
+            var vm = new AdvertImagesViewModel() { Heading = "Nowe zdjęcia", Image = advertImage };
+
+            return View("AdvertImageLoad",vm);
         }
 
         [HttpPost]
@@ -110,5 +119,53 @@ namespace AdvertisingPortal.Controllers
             return Json(new { success = true });
         }
 
+        [HttpPost]
+        public IActionResult AdvertImageLoad(AdvertImagesViewModel viewModel)
+        {
+            //if (!ModelState.IsValid)
+            //{
+            //    //var vm = PrepareAttachmentVM(attachmentVM.Attachment);
+            //    //return View("AdvertImageLoad", vm);
+            //}
+
+            try
+            {
+                var userId = User.GetUserId();
+                _advertRepository.AddAdvertImage(viewModel, userId);
+
+            }
+            catch (Exception)
+            {
+
+                return View("Error");
+            }
+
+            return RedirectToAction("Advert", new { advert = viewModel.Advert });
+        }
+
+
+        [HttpPost]
+        public IActionResult UploadImage(int advertId)
+        {
+            foreach (var file in Request.Form.Files)
+            {
+                Image image = new Image();
+                image.Name = file.FileName;
+                image.AdvertId = advertId;
+
+                MemoryStream ms = new MemoryStream();
+                file.CopyTo(ms);
+                image.Data = ms.ToArray();
+
+                ms.Close();
+                ms.Dispose();
+
+                _advertRepository.AddImage(image);
+            }
+
+            ViewBag.Message = "Image(s) stored in database!";
+
+            return View("Adverts");
+        }
     }
 }

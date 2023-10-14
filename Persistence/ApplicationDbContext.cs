@@ -13,6 +13,7 @@ namespace AdvertisingPortal.Persistence
         }
 
         public DbSet<Advert> Adverts { get; set; }
+        public DbSet<Image> Images { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<BuySellCategory> BuySellCategories { get; set; }
         public DbSet<ItemServiceCategory> ItemServiceCategories { get; set; }

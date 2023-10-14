@@ -1,5 +1,6 @@
 ﻿using AdvertisingPortal.Core.Models;
 using AdvertisingPortal.Core.Models.Domains;
+using AdvertisingPortal.Core.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdvertisingPortal.Persistence.Repositories
@@ -79,5 +80,17 @@ namespace AdvertisingPortal.Persistence.Repositories
             _context.SaveChanges();
         }
 
+        public void AddAdvertImage(AdvertImagesViewModel adImgVM, string userId)
+        {
+            var advertToAddImage = _context.Adverts.Single(x => x.Id == adImgVM.Advert.Id && x.UserId==userId);
+
+
+        }
+
+        public void AddImage(Image image)
+        {
+            _context.Images.Add(image);
+            _context.SaveChanges();
+        }
     }
 }
