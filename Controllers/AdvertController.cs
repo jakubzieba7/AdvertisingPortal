@@ -6,8 +6,6 @@ using AdvertisingPortal.Persistence.Extensions;
 using AdvertisingPortal.Persistence.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Mail;
-using System.Security.Claims;
 
 namespace AdvertisingPortal.Controllers
 {
@@ -60,7 +58,7 @@ namespace AdvertisingPortal.Controllers
             var advertImage = new Image() { Id = imageId, AdvertId = advertId };
             var vm = new AdvertImagesViewModel() { Heading = "Nowe zdjęcia", Image = advertImage };
 
-            return View("AdvertImageLoad",vm);
+            return View("AdvertImageLoad", vm);
         }
 
         [HttpPost]
@@ -120,38 +118,15 @@ namespace AdvertisingPortal.Controllers
         }
 
         [HttpPost]
-        public IActionResult AdvertImageLoad(AdvertImagesViewModel viewModel)
+        [ValidateAntiForgeryToken]
+        public IActionResult UploadImage(AdvertImagesViewModel imgVM)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    //var vm = PrepareAttachmentVM(attachmentVM.Attachment);
-            //    //return View("AdvertImageLoad", vm);
-            //}
 
-            try
-            {
-                var userId = User.GetUserId();
-                _advertRepository.AddAdvertImage(viewModel, userId);
-
-            }
-            catch (Exception)
-            {
-
-                return View("Error");
-            }
-
-            return RedirectToAction("Advert", new { advert = viewModel.Advert });
-        }
-
-
-        [HttpPost]
-        public IActionResult UploadImage(int advertId)
-        {
             foreach (var file in Request.Form.Files)
             {
                 Image image = new Image();
                 image.Name = file.FileName;
-                image.AdvertId = advertId;
+                image.AdvertId = imgVM.Image.AdvertId;
 
                 MemoryStream ms = new MemoryStream();
                 file.CopyTo(ms);
@@ -163,9 +138,7 @@ namespace AdvertisingPortal.Controllers
                 _advertRepository.AddImage(image);
             }
 
-            ViewBag.Message = "Image(s) stored in database!";
-
-            return View("Adverts");
+            return RedirectToAction("Advert", new { id = imgVM.Image.AdvertId });
         }
     }
 }

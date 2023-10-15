@@ -44,9 +44,6 @@ namespace AdvertisingPortal.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("ImageId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
 
