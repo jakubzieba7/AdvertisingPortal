@@ -1,94 +1,99 @@
 ﻿@model AdvertisingPortal.Core.ViewModels.AdvertViewModel
 
+<div class="row">
 
-@{
-    ViewData["Title"] = Model.Heading;
-}
-
-<h1>@Model.Heading</h1>
-
-@if (Model.Advert.Id != 0)
-{
-    <button class="btn btn-primary mt-3 mb-3" onclick='window.location.href="@Url.Action("UploadImage","Advert", new {advertId=Model.Advert.Id})"'>Dodaj zdjęcia</button>
-}
-
-
-<div class="col-6">
-    @using (Html.BeginForm("Advert", "Advert"))
-    {
-
-        <p class="alert alert-info mt-4 mb-4">Pola tytuł, opis, kategorie i cena są <strong>wymagane</strong></p>
-
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(x=>x.Advert.Id)
-
-
-        <div class="form-group">
-
-            @Html.LabelFor(x=>x.Advert.Title)
-            @Html.TextBoxFor(x=>x.Advert.Title,new{@class="form-control",autofocus="autofocus"})
-            @Html.ValidationMessageFor(x=>x.Advert.Title)
-        </div>
-
-        <div class="form-group">
-
-            @Html.LabelFor(x=>x.Advert.Description)
-            @Html.TextAreaFor(x=>x.Advert.Description,new{@class="form-control"})
-            @Html.ValidationMessageFor(x=>x.Advert.Description)
-        </div>
-
-        <div class="form-group">
-
-            @Html.LabelFor(x=>x.Advert.BuySellCategoryId)
-            @Html.DropDownListFor(x=>x.Advert.BuySellCategoryId,new SelectList(Model.BuySellCategories,"Id","Name"),"-- wybierz kategorię 1 --", new{@class="form-control"})
-            @Html.ValidationMessageFor(x=>x.Advert.BuySellCategoryId)
-        </div>
-
-        <div class="form-group">
-
-            @Html.LabelFor(x=>x.Advert.ItemServiceCategoryId)
-            @Html.DropDownListFor(x=>x.Advert.ItemServiceCategoryId,new SelectList(Model.ItemServiceCategories,"Id","Name"),"-- wybierz kategorię 2 --", new{@class="form-control"})
-            @Html.ValidationMessageFor(x=>x.Advert.ItemServiceCategoryId)
-        </div>
-
-        <div class="form-group">
-
-            @Html.LabelFor(x=>x.Advert.CategoryId)
-            @Html.DropDownListFor(x=>x.Advert.CategoryId,new SelectList(Model.Categories,"Id","Name"),"-- wybierz kategorię 3 --", new{@class="form-control"})
-            @Html.ValidationMessageFor(x=>x.Advert.CategoryId)
-        </div>
-
-        <div class="form-group">
-
-            @Html.LabelFor(x=>x.Advert.AdvertDate)
-            @Html.TextBoxFor(x=>x.Advert.AdvertDate,"{0:dd-MM-yyyy}",new{@class="form-control", @id="AdvertDate", autocomplete="off"})
-            @Html.ValidationMessageFor(x=>x.Advert.AdvertDate)
-        </div>
-
-        <div class="form-group">
-
-            @Html.LabelFor(x=>x.Advert.Price)
-            @Html.TextBoxFor(x=>x.Advert.Price,new{@class="form-control"})
-            @Html.ValidationMessageFor(x=>x.Advert.Price)
-        </div>
-
-        <div class="form-check">
-            @Html.CheckBoxFor(x=>x.Advert.IsPromoted,new {@class="form-check-input"})
-            @Html.LabelFor(x=>x.Advert.IsPromoted)
-        </div>
-
-        @if (Model.Advert.Id > 0)
-        {
-            <div class="form-check">
-                @Html.CheckBoxFor(x=>x.Advert.IsFinished,new {@class="form-check-input"})
-                @Html.LabelFor(x=>x.Advert.IsFinished)
-            </div>
-        }
-
-
-        <button type="submit" class="btn btn-primary btn-lg mt-2">Zapisz</button>
-
+    @{
+        ViewData["Title"] = Model.Heading;
     }
+
+    <h1>@Model.Heading</h1>
+
+    <div class="col-6">
+    @if (Model.Advert.Id != 0)
+    {
+        <button class="btn btn-primary mt-3 mb-3" onclick='window.location.href="@Url.Action("UploadImage","Advert", new {advertId=Model.Advert.Id})"'>Dodaj zdjęcia</button>
+    }
+
+        @using (Html.BeginForm("Advert", "Advert"))
+        {
+
+            <p class="alert alert-info mt-4 mb-4">Pola tytuł, opis, kategorie i cena są <strong>wymagane</strong></p>
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x=>x.Advert.Id)
+
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.Title)
+                @Html.TextBoxFor(x=>x.Advert.Title,new{@class="form-control",autofocus="autofocus"})
+                @Html.ValidationMessageFor(x=>x.Advert.Title)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.Description)
+                @Html.TextAreaFor(x=>x.Advert.Description,new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.Description)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.BuySellCategoryId)
+                @Html.DropDownListFor(x=>x.Advert.BuySellCategoryId,new SelectList(Model.BuySellCategories,"Id","Name"),"-- wybierz kategorię 1 --", new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.BuySellCategoryId)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.ItemServiceCategoryId)
+                @Html.DropDownListFor(x=>x.Advert.ItemServiceCategoryId,new SelectList(Model.ItemServiceCategories,"Id","Name"),"-- wybierz kategorię 2 --", new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.ItemServiceCategoryId)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.CategoryId)
+                @Html.DropDownListFor(x=>x.Advert.CategoryId,new SelectList(Model.Categories,"Id","Name"),"-- wybierz kategorię 3 --", new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.CategoryId)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.AdvertDate)
+                @Html.TextBoxFor(x=>x.Advert.AdvertDate,"{0:dd-MM-yyyy}",new{@class="form-control", @id="AdvertDate", autocomplete="off"})
+                @Html.ValidationMessageFor(x=>x.Advert.AdvertDate)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.Price)
+                @Html.TextBoxFor(x=>x.Advert.Price,new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.Price)
+            </div>
+
+            <div class="form-check">
+                @Html.CheckBoxFor(x=>x.Advert.IsPromoted,new {@class="form-check-input"})
+                @Html.LabelFor(x=>x.Advert.IsPromoted)
+            </div>
+
+            @if (Model.Advert.Id > 0)
+            {
+                <div class="form-check">
+                    @Html.CheckBoxFor(x=>x.Advert.IsFinished,new {@class="form-check-input"})
+                    @Html.LabelFor(x=>x.Advert.IsFinished)
+                </div>
+            }
+
+
+            <button type="submit" class="btn btn-primary btn-lg mt-2">Zapisz</button>
+
+        }
+    </div>
+
+    <div class="col-5 offset-lg-1">
+        @await Html.PartialAsync("_AdvertImagesTable",Model.Advert.Images.Where(x=>x.AdvertId==Model.Advert.Id))
+    </div>
 </div>
 
 @section Scripts{
@@ -107,5 +112,32 @@
                 forceParse: false
             });
         });
+
+        function deleteImage(id, btn) {
+            if (!confirm("Czy na pewno chcesz usunąć to zdjęcie?"))
+                return;
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("DeleteImage","Advert")",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    }
+                    else {
+                        alert(data.message);
+                    }
+
+                },
+                error: function (data) {
+                    alert(data.message);
+                },
+                dataType: 'json'
+            });
+        }
     </script>
 }

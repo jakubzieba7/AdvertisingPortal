@@ -140,5 +140,22 @@ namespace AdvertisingPortal.Controllers
 
             return RedirectToAction("Advert", new { id = imgVM.Image.AdvertId });
         }
+
+        [HttpPost]
+        public IActionResult DeleteImage(int id)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                _advertRepository.DeleteImage(id, userId);
+            }
+            catch (Exception ex)
+            {
+                //logowanie do pliku
+                return Json(new { success = false, message = ex.Message });
+            }
+
+            return Json(new { success = true });
+        }
     }
 }

@@ -47,7 +47,9 @@ namespace AdvertisingPortal.Persistence.Repositories
 
         public Advert GetAdvert(int id, string userId)
         {
-            return _context.Adverts.Single(x => x.Id == id && x.UserId == userId);
+            return _context.Adverts.
+                Include(x=>x.Images).
+                Single(x => x.Id == id && x.UserId == userId);
         }
 
         public void Add(Advert advert)
@@ -90,6 +92,14 @@ namespace AdvertisingPortal.Persistence.Repositories
         public void AddImage(Image image)
         {
             _context.Images.Add(image);
+            _context.SaveChanges();
+        }
+
+        public void DeleteImage(int id, string userId)
+        {
+            var imageToDelete = _context.Images.Single(x => x.Id == id);
+
+            _context.Images.Remove(imageToDelete);
             _context.SaveChanges();
         }
     }
