@@ -102,5 +102,12 @@ namespace AdvertisingPortal.Persistence.Repositories
             _context.Images.Remove(imageToDelete);
             _context.SaveChanges();
         }
+
+        public byte[] GetImage(int id)
+        {
+            var imageData= _context.Images.Single(x => x.Id == id);
+            
+            return imageData.Data;
+        }
     }
 }

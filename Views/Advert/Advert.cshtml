@@ -139,5 +139,16 @@
                 dataType: 'json'
             });
         }
+
+        $('.enlargeImg').bind('click', function (e) {
+            e.preventDefault();
+
+            $('#imageContent').html(
+                $('<img/>', {
+                    src: this.href
+                })
+            );
+            $('#EnlargeContent').bPopup();
+        });
     </script>
 }

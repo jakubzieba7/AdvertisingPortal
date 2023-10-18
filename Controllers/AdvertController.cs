@@ -157,5 +157,21 @@ namespace AdvertisingPortal.Controllers
 
             return Json(new { success = true });
         }
+
+        public IActionResult EnlargeShowcaseImage(int id)
+        {
+            var imageData = _advertRepository.GetImage(id);
+            
+            try
+            {
+                return File(imageData, "image/png");
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
