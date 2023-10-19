@@ -19,11 +19,11 @@
                     var img = String.Format("data:image/jpg;base64,{0}", base64);
             }
                 <img src="@img" id="EnlargeContent" class="img-thumbnail" alt="@image.Name">
-                @Html.ActionLink("Powiększ", "EnlargeShowcaseImage", "Advert", new { id = image.Id }, new { @class = "enlargeImage" })
+                @Html.ActionLink("Powiększ", "EnlargeShowcaseImage", "Image", new { id = image.Id }, new { @class = "enlargeImage" })
             </div>
             <div>
 
-            <button class="btn btn-danger btn-sm" onclick="deleteImage('@image.Id',this)">Usuń</button>
+            <button class="btn btn-danger btn-sm" style="float:right" onclick="deleteImage('@image.Id',this)">Usuń</button>
             </div>
         </div>
 
