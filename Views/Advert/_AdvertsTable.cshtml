@@ -4,6 +4,7 @@
     <table class="table mt-3 table-striped table-hover table-bordered">
         <thead>
             <tr>
+                <th scope="col"></th>
                 <th scope="col">Tytuł</th>
                 <th scope="col">Opis</th>
                 <th scope="col">Kategoria 1</th>
@@ -20,6 +21,16 @@
                 foreach (var advert in Model)
                 {
                     <tr>
+                        <td>
+                            @{
+                                var firstImage = advert.Images.FirstOrDefault();
+                                var base64 = Convert.ToBase64String(firstImage.Data);
+                                var img = String.Format("data:image/jpg;base64,{0}", base64);
+                            }
+
+                            <img src="@img" class="img-thumbnail" alt="@firstImage.Name">
+
+                        </td>
                         <td>
                             <a href="@Url.Action("Advert","Advert",new{id=advert.Id})" class="fw-bold">@advert.Title</a>
                         </td>

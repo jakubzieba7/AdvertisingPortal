@@ -17,13 +17,15 @@
                 @{
                     var base64 = Convert.ToBase64String(image.Data);
                     var img = String.Format("data:image/jpg;base64,{0}", base64);
-            }
-                <img src="@img" id="EnlargeContent" class="img-thumbnail" alt="@image.Name">
+                }
+
+                <img id="image" src="@img" class="img-thumbnail" alt="@image.Name">
+                @* <button id="popupBtn" class="btn btn-info btn-sm" style="float:right" onclick="enlargeImagePopup('@image.Id',this)">Powiększ</button> *@
                 @Html.ActionLink("Powiększ", "EnlargeShowcaseImage", "Image", new { id = image.Id }, new { @class = "enlargeImage" })
             </div>
             <div>
 
-            <button class="btn btn-danger btn-sm" style="float:right" onclick="deleteImage('@image.Id',this)">Usuń</button>
+                <button class="btn btn-danger btn-sm" style="float:right" onclick="deleteImage('@image.Id',this)">Usuń</button>
             </div>
         </div>
 

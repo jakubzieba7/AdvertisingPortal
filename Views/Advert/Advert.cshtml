@@ -9,10 +9,10 @@
     <h1>@Model.Heading</h1>
 
     <div class="col-6">
-    @if (Model.Advert.Id != 0)
-    {
-        <button class="btn btn-primary mt-3 mb-3" onclick='window.location.href="@Url.Action("UploadImage","Advert", new {advertId=Model.Advert.Id})"'>Dodaj zdjęcia</button>
-    }
+        @if (Model.Advert.Id != 0)
+        {
+            <button class="btn btn-primary mt-3 mb-3" onclick='window.location.href="@Url.Action("UploadImage","Advert", new {advertId=Model.Advert.Id})"'>Dodaj zdjęcia</button>
+        }
 
         @using (Html.BeginForm("Advert", "Advert"))
         {
@@ -140,15 +140,31 @@
             });
         }
 
-        $('.enlargeImg').bind('click', function (e) {
-            e.preventDefault();
+        // $('#popupBtn').on('click', function () {
+        //     $('#image').dialog({
+        //         title: "Zdjęcie",
+        //         buttons: {
+        //             Close: function () {
+        //                 $(this).dialog('close');
+        //             }
+        //         },
+        //         modal: true
+        //     });
+        //     return false;
 
-            $('#imageContent').html(
-                $('<img/>', {
-                    src: this.href
-                })
-            );
-            $('#EnlargeContent').bPopup();
-        });
+        // });
+
+       // $('.enlargeImg').bind('click', function (e) {
+       //     e.preventDefault();
+
+       //  $('#enlargeImage').bPopup(
+       //      {
+       //          content: 'image', 'ajax', 'iframe' or 'image'
+       //          contentContainer: '.content',
+       //          loadUrl: 'image.jpg'
+       //      }
+       //  );
+       // });
+
     </script>
 }

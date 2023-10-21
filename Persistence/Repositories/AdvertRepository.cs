@@ -16,6 +16,7 @@ namespace AdvertisingPortal.Persistence.Repositories
         public IEnumerable<Advert> GetAdverts(string userId, string title = null, int categoryId = 0, int buySellCategoryId = 0, int itemServiceCategoryId = 0, decimal priceMin = 0, decimal priceMax = 0, bool IsFinished = false, bool isPromoted = false)
         {
             var adverts = _context.Adverts.
+                Include(x=>x.Images).
                 Include(x => x.Category).
                 Include(x => x.BuySellCategory).
                 Include(x => x.ItemServiceCategory).
