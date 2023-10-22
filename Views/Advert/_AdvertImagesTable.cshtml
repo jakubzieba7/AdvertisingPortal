@@ -12,16 +12,16 @@
     @foreach (Image image in Model)
     {
         <div class="col-md-4">
-            <div>
+            <div id="img" class="gallery">
 
                 @{
                     var base64 = Convert.ToBase64String(image.Data);
                     var img = String.Format("data:image/jpg;base64,{0}", base64);
                 }
-
-                <img id="image" src="@img" class="img-thumbnail" alt="@image.Name">
-                @* <button id="popupBtn" class="btn btn-info btn-sm" style="float:right" onclick="enlargeImagePopup('@image.Id',this)">Powiększ</button> *@
-                @Html.ActionLink("Powiększ", "EnlargeShowcaseImage", "Image", new { id = image.Id }, new { @class = "enlargeImage" })
+                <a class="big" href="@img" rel="rel1">
+                    <img src="@img" class="img-thumbnail" alt="@image.Name" title="@img">
+                </a>
+                @* @Html.ActionLink("Powiększ", "EnlargeShowcaseImage", "Image", new { id = image.Id }, new { @class = "enlargeImage" }) *@
             </div>
             <div>
 
