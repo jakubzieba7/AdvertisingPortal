@@ -30,12 +30,12 @@
             new { @class = "form-control mb-2" })
         </div>
         <div class="col-sm-3">
-            @Html.TextBoxFor(x => x.FilterAdverts.PriceMin, 
-                new { @class = "form-control mb-2", placeholder = "Cena min" })
+            @Html.TextBoxFor(x => x.FilterAdverts.PriceMin,
+            new { @class = "form-control mb-2", placeholder = "Cena min" })
         </div>
         <div class="col-sm-3">
-            @Html.TextBoxFor(x => x.FilterAdverts.PriceMax, 
-                new { @class = "form-control mb-2", placeholder = Html.DisplayNameFor(m => m.FilterAdverts.PriceMax) })
+            @Html.TextBoxFor(x => x.FilterAdverts.PriceMax,
+            new { @class = "form-control mb-2", placeholder = Html.DisplayNameFor(m => m.FilterAdverts.PriceMax) })
         </div>
         <div class="col-sm-2">
             <div class="form-check mb-2">
@@ -64,9 +64,9 @@
 </div>
 
 @section Scripts
-{
+    {
     <script type="text/javascript">
-        
+
         $(document).ready(function () {
 
             $('#filterForm').submit(function () {
