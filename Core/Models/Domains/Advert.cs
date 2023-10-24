@@ -43,5 +43,9 @@ namespace AdvertisingPortal.Core.Models.Domains
         [Display(Name ="Cena")]
         public decimal Price { get; set; }
         public ICollection<Image> Images { get; set; }
+        public string Location { get; set; }
+        [Required(ErrorMessage = "Kod pocztowy jest wymagany")]
+        [RegularExpression(@"^\d{2}-\d{3}$", ErrorMessage = "Niewłaściwy kod pocztowy")]
+        public string ZipCode { get; set; }
     }
 }
