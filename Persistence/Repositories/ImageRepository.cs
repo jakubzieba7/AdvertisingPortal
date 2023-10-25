@@ -25,15 +25,15 @@ namespace AdvertisingPortal.Persistence.Repositories
 
         public void DeleteImage(int id, string userId)
         {
-            var imageToDelete = _context.Images.Single(x => x.Id == id);
+            var imageToDelete = _context.Images.Single(x => x.Id == id && x.UserId==userId);
 
             _context.Images.Remove(imageToDelete);
             _context.SaveChanges();
         }
 
-        public byte[] GetImage(int id)
+        public byte[] GetImage(int id, string userId)
         {
-            var imageData = _context.Images.Single(x => x.Id == id);
+            var imageData = _context.Images.Single(x => x.Id == id && x.UserId == userId);
 
             return imageData.Data;
         }

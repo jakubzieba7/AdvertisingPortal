@@ -71,6 +71,8 @@ namespace AdvertisingPortal.Persistence.Repositories
             advertToUpdate.IsFinished = advert.IsFinished;
             advertToUpdate.IsPromoted = advert.IsPromoted;
             advertToUpdate.Price = advert.Price;
+            advertToUpdate.Location = advert.Location;
+            advertToUpdate.ZipCode = advert.ZipCode;
 
             _context.SaveChanges();
         }

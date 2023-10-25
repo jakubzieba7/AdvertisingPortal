@@ -11,6 +11,7 @@
                 <th scope="col">Kategoria 2</th>
                 <th scope="col">Kategoria 3</th>
                 <th scope="col">Data publikacji</th>
+                <th scope="col">Lokalizacja</th>
                 <th scope="col">Cena</th>
                 <th scope="col">Status</th>
                 <th scope="col"></th>
@@ -25,11 +26,15 @@
                         <td>
                             <div class="image">
                                 @{
-                                    var firstImage = advert.Images.FirstOrDefault();
-                                    var base64 = Convert.ToBase64String(firstImage.Data);
-                                    var img = String.Format("data:image/jpg;base64,{0}", base64);
+                                    if (advert.Images.Any())
+                                    {
 
-                                    <a><img src="@img" width="128" height="96" /></a>
+                                        var firstImage = advert.Images.FirstOrDefault();
+                                        var base64 = Convert.ToBase64String(firstImage.Data);
+                                        var img = String.Format("data:image/jpg;base64,{0}", base64);
+
+                                        <a><img src="@img" width="128" height="96" /></a>
+                                    }
                                 }
                             </div>
                         </td>
@@ -41,6 +46,7 @@
                         <td>@advert.ItemServiceCategory.Name</td>
                         <td>@advert.Category.Name</td>
                         <td>@advert.AdvertDate.ToString("dd-MM-yyyy")</td>
+                        <td>@advert.Location</td>
                         <td>@advert.Price zł</td>
                         <td>
                             @if (!advert.IsFinished)

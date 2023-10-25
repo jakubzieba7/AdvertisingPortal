@@ -23,12 +23,14 @@ namespace AdvertisingPortal.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UploadImage(AdvertImagesViewModel imgVM)
         {
+            var userId = User.GetUserId();
 
             foreach (var file in Request.Form.Files)
             {
                 Image image = new Image();
                 image.Name = file.FileName;
                 image.AdvertId = imgVM.Image.AdvertId;
+                image.UserId = userId;
 
                 MemoryStream ms = new MemoryStream();
                 file.CopyTo(ms);
@@ -40,7 +42,7 @@ namespace AdvertisingPortal.Controllers
                 _imageRepository.AddImage(image);
             }
 
-            return RedirectToAction("Advert", new { id = imgVM.Image.AdvertId });
+            return RedirectToAction("Advert", "Advert", new { id = imgVM.Image.AdvertId });
         }
 
         [HttpPost]
@@ -62,7 +64,8 @@ namespace AdvertisingPortal.Controllers
 
         public IActionResult EnlargeShowcaseImage(int id)
         {
-            var imageData = _imageRepository.GetImage(id);
+            var userId = User.GetUserId();
+            var imageData = _imageRepository.GetImage(id, userId);
 
             try
             {

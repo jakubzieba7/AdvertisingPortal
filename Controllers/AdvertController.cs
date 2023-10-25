@@ -55,7 +55,8 @@ namespace AdvertisingPortal.Controllers
 
         public IActionResult UploadImage(int advertId, int imageId = 0)
         {
-            var advertImage = new Image() { Id = imageId, AdvertId = advertId };
+            var userId = User.GetUserId();
+            var advertImage = new Image() { Id = imageId, AdvertId = advertId, UserId=userId };
             var vm = new AdvertImagesViewModel() { Heading = "Nowe zdjęcia", Image = advertImage };
 
             return View("AdvertImageLoad", vm);
