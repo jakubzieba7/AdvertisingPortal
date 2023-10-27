@@ -53,8 +53,14 @@
                 @Html.LabelFor(x => x.FilterAdverts.IsPromoted)
             </div>
         </div>
+
+        <div class="col-sm-1">
+            <button class="btn btn-secondary mt-5 mb-5" onclick='window.location.href="@Url.Action("Map","GoogleMapAPI")"'>Mapa</button>
+
+        </div>
+
         <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-5">Szukaj</button>
+            <button type="submit" class="btn btn-primary mt-5 mb-5">Szukaj</button>
         </div>
     </div>
 </form>
