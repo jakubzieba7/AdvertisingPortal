@@ -2,9 +2,9 @@
 
 namespace AdvertisingPortal.Controllers
 {
-    public class GoogleMapAPIController : Controller
+    public class MapController : Controller
     {
-        public IActionResult Map()
+        public IActionResult AdvertsMap()
         {
             return View();
         }

@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "ASP.NET Core – Google Maps API";
+}
+
+<title>@ViewBag.Title</title>
+
+<div id="map" style="height: 400px; width: 100%;">
+    @* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsge03eTloN7UJTkkoNQ5yDemjr46mRdU&callback=initMap&v=weekly"
+            defer></script> *@
+</div>
+
+
+
+@section Scripts
+    {
+    <script type="text/javascript">
+
+        (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })({
+            key: "AIzaSyBsge03eTloN7UJTkkoNQ5yDemjr46mRdU",
+            v: "weekly",
+            // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+            // Add other bootstrap parameters as needed, using camel case.
+            language: "pl",
+            region: "PL",
+            authReferrerPolicy: "origin",
+        });
+
+        let map;
+
+
+        async function initMap() {
+
+            const position = { lat: 50.03314208984375, lng: 19.931547164916992 };
+            
+            // Request needed libraries.
+            const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+            // The map, centered at
+            map = new Map(document.getElementById("map"), {
+                center: { lat: 50.03314208984375, lng: 19.931547164916992 },
+                zoom: 13,
+            });
+
+
+            // Add markers to the map
+            // Set up three markers with info windows
+
+            var point = new google.maps.LatLng(50.03224208984375, 19.931557164916992);
+            var marker = createMarker(point, '<div style="width:240px">Some stuff to display in the First Info Window. With a <a href="http://www.econym.demon.co.uk">Link<\/a> to Mike Williams&apos; home page<\/div>')
+
+            var point = new google.maps.LatLng(50.03414208984375, 19.931647164916992);
+            var marker = createMarker(point, 'Some stuff to display in the<br>Second Info Window')
+
+            var point = new google.maps.LatLng(50.03314708984375, 19.931567164916992);
+            var marker = createMarker(point, 'Some stuff to display in the<br>Third Info Window')
+
+        }
+
+        function createMarker(latlng, html) {
+            var contentString = html;
+            var marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                zIndex: Math.round(latlng.lat() * -100000) << 5
+            });
+
+            var infowindow = new google.maps.InfoWindow({
+                content: name
+            });
+
+            google.maps.event.addListener(marker, "click", function () {
+                infowindow.setContent(contentString);
+                infowindow.open(map, marker);
+            });
+
+        }
+
+        initMap();
+
+    </script>
+    }
