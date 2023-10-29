@@ -1,4 +1,6 @@
-﻿@{
+﻿@model AdvertisingPortal.Core.ViewModels.AdvertsViewModel
+
+@{
     ViewBag.Title = "ASP.NET Core – Google Maps API";
 }
 
@@ -26,6 +28,10 @@
         });
 
         let map;
+        let marker;
+        let geocoder;
+        let responseDiv;
+        let response;
 
 
         async function initMap() {
@@ -42,7 +48,6 @@
                 zoom: 13,
             });
 
-
             // Add markers to the map
             // Set up three markers with info windows
 
@@ -55,7 +60,59 @@
             var point = new google.maps.LatLng(50.03314708984375, 19.931567164916992);
             var marker = createMarker(point, 'Some stuff to display in the<br>Third Info Window')
 
+
+            var geocoder = new google.maps.Geocoder();
+            var infowindow = new google.maps.InfoWindow();
+
+            //var addressesToGeocode[];
+
+
+
+            var addressToGeocode = "32-067"; // Replace with the address you want to geocode
+            //var addressToGeocode = "1600 Amphitheatre Parkway, Mountain View, CA"; // Replace with the address you want to geocode
+
+            geocoder.geocode({ address: addressToGeocode }, function (results, status) {
+                if (status === "OK") {
+                    var location = results[0].geometry.location;
+
+                    // Create a marker
+                    var marker = new google.maps.Marker({
+                        position: location,
+                        map: map,
+                        title: "Marker Title",
+                    });
+
+                    // Display the geocoded address in an info window
+                    //infowindow.setContent(results[0].formatted_address);
+                    //infowindow.open(map, marker);
+
+                    google.maps.event.addListener(marker, "click", function () {
+                        infowindow.setContent(results[0].formatted_address);
+                        infowindow.open(map, marker);
+                    });
+
+                    // Display the address in an HTML element
+                    var addressElement = document.getElementById("address");
+                    addressElement.textContent = "Address: " + results[0].formatted_address;
+                } else {
+                    console.error("Geocode was not successful for the following reason: " + status);
+                }
+            });
+
+
+            // this is where the pin actually gets added to the map.
+            // bounds.extend() takes in a map location object
+            //bounds.extend(new google.maps.LatLng(lat, lng));
+            //// fit the map to the new marker
+            //map.fitBounds(bounds);
+            //// center the map
+            //map.setCenter(bounds.getCenter());
+            //
+            //// Sets the boundaries of the map based on pin locations
+            //window.mapBounds = new google.maps.LatLngBounds();
+
         }
+
 
         function createMarker(latlng, html) {
             var contentString = html;
@@ -75,6 +132,30 @@
             });
 
         }
+
+        // function clear() {
+        //     marker.setMap(null);
+        //     responseDiv.style.display = "none";
+        // }
+
+        // function geocode(request) {
+        //     clear();
+        //     geocoder
+        //         .geocode(request)
+        //         .then((result) => {
+        //             const { results } = result;
+
+        //             map.setCenter(results[0].geometry.location);
+        //             marker.setPosition(results[0].geometry.location);
+        //             marker.setMap(map);
+        //             responseDiv.style.display = "block";
+        //             response.innerText = JSON.stringify(result, null, 2);
+        //             return results;
+        //         })
+        //         .catch((e) => {
+        //             alert("Geocode was not successful for the following reason: " + e);
+        //         });
+        // }
 
         initMap();
 
