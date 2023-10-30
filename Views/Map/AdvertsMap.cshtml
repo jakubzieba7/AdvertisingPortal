@@ -1,14 +1,38 @@
-﻿@model AdvertisingPortal.Core.ViewModels.AdvertsViewModel
-
+﻿@model IEnumerable<string>
 @{
-    ViewBag.Title = "ASP.NET Core – Google Maps API";
+    ViewBag.Title = "Ogłoszenia na mapie";
 }
 
 <title>@ViewBag.Title</title>
 
+
+<div>
+    @if (Model != null && Model.Any())
+    {
+        foreach (var advert in Model)
+        {
+            @* <div class="image">
+    @{
+    if (advert.Images.Any())
+    {
+    var firstImage = advert.Images.FirstOrDefault();
+    var base64 = Convert.ToBase64String(firstImage.Data);
+    var img = String.Format("data:image/jpg;base64,{0}", base64);
+
+    <a><img src="@img" width="128" height="96" /></a>
+    }
+    }
+    </div>
+    <a href="@Url.Action("Advert","Advert",new{id=advert.Id})" class="fw-bold">@advert.Title</a>
+
+    <div id="map-container-@advert.Id" class="map-container" style="height: 200px; width: 100%;"></div> *@
+
+        }
+    }
+</div>
+
 <div id="map" style="height: 400px; width: 100%;">
-    @* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsge03eTloN7UJTkkoNQ5yDemjr46mRdU&callback=initMap&v=weekly"
-            defer></script> *@
+
 </div>
 
 
@@ -37,7 +61,7 @@
         async function initMap() {
 
             const position = { lat: 50.03314208984375, lng: 19.931547164916992 };
-            
+
             // Request needed libraries.
             const { Map } = await google.maps.importLibrary("maps");
             const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
@@ -64,41 +88,41 @@
             var geocoder = new google.maps.Geocoder();
             var infowindow = new google.maps.InfoWindow();
 
-            //var addressesToGeocode[];
+            var data = '@Html.Raw(Json.Serialize(Model))';
+            var advertsZipCode = JSON.parse(data);
+            console.log(advertsZipCode);
 
 
+            advertsZipCode.forEach(function (element) {
 
-            var addressToGeocode = "32-067"; // Replace with the address you want to geocode
-            //var addressToGeocode = "1600 Amphitheatre Parkway, Mountain View, CA"; // Replace with the address you want to geocode
+                console.log(element);
+                var addressToGeocode = element;
 
-            geocoder.geocode({ address: addressToGeocode }, function (results, status) {
-                if (status === "OK") {
-                    var location = results[0].geometry.location;
+                geocoder.geocode({ address: addressToGeocode }, function (results, status) {
+                    if (status === "OK") {
+                        var location = results[0].geometry.location;
 
-                    // Create a marker
-                    var marker = new google.maps.Marker({
-                        position: location,
-                        map: map,
-                        title: "Marker Title",
-                    });
+                        // Create a marker
+                        var marker = new google.maps.Marker({
+                            position: location,
+                            map: map,
+                            title: "Marker Title",
+                        });
 
-                    // Display the geocoded address in an info window
-                    //infowindow.setContent(results[0].formatted_address);
-                    //infowindow.open(map, marker);
+                        // Display the geocoded address in an info window
+                        //infowindow.setContent(results[0].formatted_address);
+                        //infowindow.open(map, marker);
 
-                    google.maps.event.addListener(marker, "click", function () {
-                        infowindow.setContent(results[0].formatted_address);
-                        infowindow.open(map, marker);
-                    });
+                        google.maps.event.addListener(marker, "click", function () {
+                            infowindow.setContent(results[0].formatted_address);
+                            infowindow.open(map, marker);
+                        });
 
-                    // Display the address in an HTML element
-                    var addressElement = document.getElementById("address");
-                    addressElement.textContent = "Address: " + results[0].formatted_address;
-                } else {
-                    console.error("Geocode was not successful for the following reason: " + status);
-                }
-            });
-
+                    } else {
+                        console.error("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            })
 
             // this is where the pin actually gets added to the map.
             // bounds.extend() takes in a map location object
@@ -123,7 +147,7 @@
             });
 
             var infowindow = new google.maps.InfoWindow({
-                content: name
+                //content: name
             });
 
             google.maps.event.addListener(marker, "click", function () {
@@ -132,30 +156,6 @@
             });
 
         }
-
-        // function clear() {
-        //     marker.setMap(null);
-        //     responseDiv.style.display = "none";
-        // }
-
-        // function geocode(request) {
-        //     clear();
-        //     geocoder
-        //         .geocode(request)
-        //         .then((result) => {
-        //             const { results } = result;
-
-        //             map.setCenter(results[0].geometry.location);
-        //             marker.setPosition(results[0].geometry.location);
-        //             marker.setMap(map);
-        //             responseDiv.style.display = "block";
-        //             response.innerText = JSON.stringify(result, null, 2);
-        //             return results;
-        //         })
-        //         .catch((e) => {
-        //             alert("Geocode was not successful for the following reason: " + e);
-        //         });
-        // }
 
         initMap();
 

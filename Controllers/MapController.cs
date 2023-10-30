@@ -1,12 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AdvertisingPortal.Persistence;
+using AdvertisingPortal.Persistence.Extensions;
+using AdvertisingPortal.Persistence.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AdvertisingPortal.Controllers
 {
     public class MapController : Controller
     {
+        private AdvertRepository _advertRepository;
+
+        public MapController(ApplicationDbContext context)
+        {
+            _advertRepository = new AdvertRepository(context);
+        }
         public IActionResult AdvertsMap()
         {
-            return View();
+            var userId = User.GetUserId();
+            var advertsZipCode = _advertRepository.GetAdverts(userId).Select(x => x.ZipCode);
+
+            return View(advertsZipCode);
+            //return View();
         }
     }
 }
