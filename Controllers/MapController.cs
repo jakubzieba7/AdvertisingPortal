@@ -16,9 +16,9 @@ namespace AdvertisingPortal.Controllers
         public IActionResult AdvertsMap()
         {
             var userId = User.GetUserId();
-            var advertsZipCode = _advertRepository.GetAdverts(userId).Select(x => x.ZipCode);
+            var adverts = _advertRepository.GetAdverts(userId);
 
-            return View(advertsZipCode);
+            return View(adverts);
             //return View();
         }
     }

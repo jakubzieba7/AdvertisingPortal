@@ -1,41 +1,11 @@
-﻿@model IEnumerable<string>
+﻿@model IEnumerable<AdvertisingPortal.Core.Models.Domains.Advert>
 @{
     ViewBag.Title = "Ogłoszenia na mapie";
 }
 
 <title>@ViewBag.Title</title>
 
-
-<div>
-    @if (Model != null && Model.Any())
-    {
-        foreach (var advert in Model)
-        {
-            @* <div class="image">
-    @{
-    if (advert.Images.Any())
-    {
-    var firstImage = advert.Images.FirstOrDefault();
-    var base64 = Convert.ToBase64String(firstImage.Data);
-    var img = String.Format("data:image/jpg;base64,{0}", base64);
-
-    <a><img src="@img" width="128" height="96" /></a>
-    }
-    }
-    </div>
-    <a href="@Url.Action("Advert","Advert",new{id=advert.Id})" class="fw-bold">@advert.Title</a>
-
-    <div id="map-container-@advert.Id" class="map-container" style="height: 200px; width: 100%;"></div> *@
-
-        }
-    }
-</div>
-
-<div id="map" style="height: 400px; width: 100%;">
-
-</div>
-
-
+<div id="map" style="height: 400px; width: 100%;"></div>
 
 @section Scripts
     {
@@ -88,10 +58,15 @@
             var geocoder = new google.maps.Geocoder();
             var infowindow = new google.maps.InfoWindow();
 
-            var data = '@Html.Raw(Json.Serialize(Model))';
-            var advertsZipCode = JSON.parse(data);
+            var modelZipCodes = '@Html.Raw(Json.Serialize(Model.Select(x=>x.ZipCode)))';
+            var advertsZipCode = JSON.parse(modelZipCodes);
             console.log(advertsZipCode);
 
+            var modelImageData = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))';
+            var advertsImageData = JSON.parse(modelImageData);
+
+            var modelTitles = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Title)))';
+            var advertsTitle = JSON.parse(modelTitles);
 
             advertsZipCode.forEach(function (element) {
 
@@ -122,6 +97,42 @@
                         console.error("Geocode was not successful for the following reason: " + status);
                     }
                 });
+            })
+
+            //creating array for all data
+            let arrayMarkers = [];
+            let rows = advertsZipCode.length;
+
+
+            for (let i = 0; i < rows; i++) {
+                arrayMarkers[i] = [];
+                arrayMarkers[i][0] = advertsZipCode[i];
+                arrayMarkers[i][1] = advertsTitle[i];
+                //arrayMarkers[i][2] = advertsImageData[i];
+
+                //console.log(arrayMarkers[i]);
+            }
+
+            let i = 0;
+
+            advertsImageData.forEach(function (element) {
+                i = i + 1;
+                var base64 = btoa(String.fromCharCode.apply(null, advertsImageData));
+                // Create a data URI with the appropriate MIME type (e.g., image/jpeg)
+                var img = "data:image/png;base64," + base64;
+
+                // google.maps.event.addListener(marker, "click", function () {
+                //     infowindow.setContent('<img src="img?auto=compress&cs=tinysrgb&h=350" style="width:128; height:96" /><br><p>MacArthur Patterson<br>"A Bear Shaped Hole"<br>Artist: Roger Peet and Rush Santos</p><br>');
+                //     infowindow.open(map, marker);
+                // });
+                arrayMarkers[i][2] = img;
+
+                //console.log(img);
+                console.log(arrayMarkers[i]);
+            })
+
+            advertsTitle.forEach(function (element) {
+                console.log(element);
             })
 
             // this is where the pin actually gets added to the map.
