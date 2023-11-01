@@ -5,7 +5,7 @@
 
 <title>@ViewBag.Title</title>
 
-<div id="map" style="height: 400px; width: 100%;"></div>
+<div id="map" style="height: 600px; width: 100%;"></div>
 
 @section Scripts
     {
@@ -42,19 +42,6 @@
                 zoom: 13,
             });
 
-            // Add markers to the map
-            // Set up three markers with info windows
-
-            var point = new google.maps.LatLng(50.03224208984375, 19.931557164916992);
-            var marker = createMarker(point, '<div style="width:240px">Some stuff to display in the First Info Window. With a <a href="http://www.econym.demon.co.uk">Link<\/a> to Mike Williams&apos; home page<\/div>')
-
-            var point = new google.maps.LatLng(50.03414208984375, 19.931647164916992);
-            var marker = createMarker(point, 'Some stuff to display in the<br>Second Info Window')
-
-            var point = new google.maps.LatLng(50.03314708984375, 19.931567164916992);
-            var marker = createMarker(point, 'Some stuff to display in the<br>Third Info Window')
-
-
             var geocoder = new google.maps.Geocoder();
             var infowindow = new google.maps.InfoWindow();
 
@@ -66,12 +53,43 @@
             var advertsImageData = JSON.parse(modelImageData);
 
             var modelTitles = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Title)))';
-            var advertsTitle = JSON.parse(modelTitles);
+            var sanitizedModelTitles = modelTitles.replace(/[\u0000-\u0019]+/g, ""); // Replace control characters
+            var advertsTitle = JSON.parse(sanitizedModelTitles);
 
-            advertsZipCode.forEach(function (element) {
+            var modelIDs = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Id)))';
+            var advertsIDs = JSON.parse(modelIDs);
 
-                console.log(element);
-                var addressToGeocode = element;
+            var modelDescriptions = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Description)))';
+            let sanitizedModelDesc = modelDescriptions.replace(/[\u0000-\u0019]+/g, ""); // Replace control characters
+            var advertsDescription = JSON.parse(sanitizedModelDesc);
+
+            var modelPrices = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Price)))';
+            var advertsPrices = JSON.parse(modelPrices);
+
+            //creating array for all markers data
+            let arrayMarkers = [];
+            let rows = advertsZipCode.length;
+
+
+            for (let i = 0; i < rows; i++) {
+                arrayMarkers[i] = [];
+                arrayMarkers[i][0] = advertsZipCode[i];
+                arrayMarkers[i][1] = advertsTitle[i];
+                arrayMarkers[i][3] = advertsIDs[i];
+                arrayMarkers[i][4] = advertsDescription[i];
+                arrayMarkers[i][5] = advertsPrices[i];
+
+                var base64 = btoa(String.fromCharCode.apply(null, advertsImageData));
+                var img = "data:image/jpeg;base64," + base64;
+                arrayMarkers[i][2] = img;
+
+                console.log(arrayMarkers[i]);
+            }
+
+            for (let i = 0; i < arrayMarkers.length; i++) {
+
+                var addressToGeocode = arrayMarkers[i][0];
+                var img = arrayMarkers[i][2];
 
                 geocoder.geocode({ address: addressToGeocode }, function (results, status) {
                     if (status === "OK") {
@@ -81,15 +99,12 @@
                         var marker = new google.maps.Marker({
                             position: location,
                             map: map,
-                            title: "Marker Title",
+                            title: arrayMarkers[i][1],
                         });
 
-                        // Display the geocoded address in an info window
-                        //infowindow.setContent(results[0].formatted_address);
-                        //infowindow.open(map, marker);
-
                         google.maps.event.addListener(marker, "click", function () {
-                            infowindow.setContent(results[0].formatted_address);
+                            //infowindow.setContent(results[0].formatted_address);
+                            infowindow.setContent('<img src="' + arrayMarkers[i][2] + '?auto=compress&cs=tinysrgb&h=350" style="width:128; height:96" /><br><br><a href=../Advert/Advert/' + arrayMarkers[i][3] + '>' + arrayMarkers[i][1] + '</a><br>' + arrayMarkers[i][4] + '<br><br><b>Cena:' + arrayMarkers[i][5] + '</b>');
                             infowindow.open(map, marker);
                         });
 
@@ -97,43 +112,12 @@
                         console.error("Geocode was not successful for the following reason: " + status);
                     }
                 });
-            })
 
-            //creating array for all data
-            let arrayMarkers = [];
-            let rows = advertsZipCode.length;
-
-
-            for (let i = 0; i < rows; i++) {
-                arrayMarkers[i] = [];
-                arrayMarkers[i][0] = advertsZipCode[i];
-                arrayMarkers[i][1] = advertsTitle[i];
-                //arrayMarkers[i][2] = advertsImageData[i];
-
-                //console.log(arrayMarkers[i]);
             }
 
-            let i = 0;
-
-            advertsImageData.forEach(function (element) {
-                i = i + 1;
-                var base64 = btoa(String.fromCharCode.apply(null, advertsImageData));
-                // Create a data URI with the appropriate MIME type (e.g., image/jpeg)
-                var img = "data:image/png;base64," + base64;
-
-                // google.maps.event.addListener(marker, "click", function () {
-                //     infowindow.setContent('<img src="img?auto=compress&cs=tinysrgb&h=350" style="width:128; height:96" /><br><p>MacArthur Patterson<br>"A Bear Shaped Hole"<br>Artist: Roger Peet and Rush Santos</p><br>');
-                //     infowindow.open(map, marker);
-                // });
-                arrayMarkers[i][2] = img;
-
-                //console.log(img);
-                console.log(arrayMarkers[i]);
-            })
-
-            advertsTitle.forEach(function (element) {
-                console.log(element);
-            })
+            // advertsTitle.forEach(function (element) {
+            //     console.log(element);
+            // })
 
             // this is where the pin actually gets added to the map.
             // bounds.extend() takes in a map location object
@@ -145,26 +129,6 @@
             //
             //// Sets the boundaries of the map based on pin locations
             //window.mapBounds = new google.maps.LatLngBounds();
-
-        }
-
-
-        function createMarker(latlng, html) {
-            var contentString = html;
-            var marker = new google.maps.Marker({
-                position: latlng,
-                map: map,
-                zIndex: Math.round(latlng.lat() * -100000) << 5
-            });
-
-            var infowindow = new google.maps.InfoWindow({
-                //content: name
-            });
-
-            google.maps.event.addListener(marker, "click", function () {
-                infowindow.setContent(contentString);
-                infowindow.open(map, marker);
-            });
 
         }
 
