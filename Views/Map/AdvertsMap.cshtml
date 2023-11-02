@@ -30,15 +30,54 @@
 
         async function initMap() {
 
-            const position = { lat: 50.03314208984375, lng: 19.931547164916992 };
+            function showError(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        error = "User denied the request for Geolocation."
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        error = "Location information is unavailable."
+                        break;
+                    case error.TIMEOUT:
+                        error = "The request to get user location timed out."
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        error = "An unknown error occurred."
+                        break;
+                }
+            }
+
+            var latitude;
+            var longitude;
+
+            if ("geolocation" in navigator) {
+                // Prompt user for permission to access their location
+                navigator.geolocation.watchPosition(
+                    // Success callback function
+                    function (position) {
+
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+
+                        console.log(`Latitude: ${latitude}, longitude: ${longitude}`);
+                    },
+                    // Error callback function
+                    function (error) {
+                        console.error(showError);
+                        //console.error("Error getting user location:", error);
+                    }
+                );
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
 
             // Request needed libraries.
             const { Map } = await google.maps.importLibrary("maps");
             const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-            // The map, centered at
             map = new Map(document.getElementById("map"), {
-                center: { lat: 50.03314208984375, lng: 19.931547164916992 },
+                //center: { lat: 50.03314208984375, lng: 19.931547164916992 },
+                center: { lat: latitude, lng: longitude },
                 zoom: 13,
             });
 
@@ -47,7 +86,6 @@
 
             var modelZipCodes = '@Html.Raw(Json.Serialize(Model.Select(x=>x.ZipCode)))';
             var advertsZipCode = JSON.parse(modelZipCodes);
-            console.log(advertsZipCode);
 
             var modelImageData = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))';
             var advertsImageData = JSON.parse(modelImageData);
@@ -66,7 +104,6 @@
             var modelPrices = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Price)))';
             var advertsPrices = JSON.parse(modelPrices);
 
-            //creating array for all markers data
             let arrayMarkers = [];
             let rows = advertsZipCode.length;
 
@@ -89,13 +126,11 @@
             for (let i = 0; i < arrayMarkers.length; i++) {
 
                 var addressToGeocode = arrayMarkers[i][0];
-                var img = arrayMarkers[i][2];
 
                 geocoder.geocode({ address: addressToGeocode }, function (results, status) {
                     if (status === "OK") {
                         var location = results[0].geometry.location;
 
-                        // Create a marker
                         var marker = new google.maps.Marker({
                             position: location,
                             map: map,
@@ -104,7 +139,7 @@
 
                         google.maps.event.addListener(marker, "click", function () {
                             //infowindow.setContent(results[0].formatted_address);
-                            infowindow.setContent('<img src="' + arrayMarkers[i][2] + '?auto=compress&cs=tinysrgb&h=350" style="width:128; height:96" /><br><br><a href=../Advert/Advert/' + arrayMarkers[i][3] + '>' + arrayMarkers[i][1] + '</a><br>' + arrayMarkers[i][4] + '<br><br><b>Cena:' + arrayMarkers[i][5] + '</b>');
+                            infowindow.setContent('<img src="' + arrayMarkers[i][2] + '" style="width:128; height:96" /><br><br><a href=../Advert/Advert/' + arrayMarkers[i][3] + '>' + arrayMarkers[i][1] + '</a><br>' + arrayMarkers[i][4] + '<br><br><b>Cena:' + arrayMarkers[i][5] + '</b>');
                             infowindow.open(map, marker);
                         });
 
@@ -114,21 +149,6 @@
                 });
 
             }
-
-            // advertsTitle.forEach(function (element) {
-            //     console.log(element);
-            // })
-
-            // this is where the pin actually gets added to the map.
-            // bounds.extend() takes in a map location object
-            //bounds.extend(new google.maps.LatLng(lat, lng));
-            //// fit the map to the new marker
-            //map.fitBounds(bounds);
-            //// center the map
-            //map.setCenter(bounds.getCenter());
-            //
-            //// Sets the boundaries of the map based on pin locations
-            //window.mapBounds = new google.maps.LatLngBounds();
 
         }
 
