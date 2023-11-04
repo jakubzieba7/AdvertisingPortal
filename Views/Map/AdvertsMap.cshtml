@@ -3,6 +3,29 @@
     ViewBag.Title = "Ogłoszenia na mapie";
 }
 
+@if (Model != null && Model.Any())
+{
+    var i = 0;
+    foreach (var advert in Model)
+    {
+
+        if (advert.Images.Any())
+        {
+            var idConc = string.Concat("injectedData", i);
+            var firstImage = advert.Images.FirstOrDefault();
+            var base64 = Convert.ToBase64String(firstImage.Data);
+            var img = String.Format("data:image/jpg;base64,{0}", base64);
+
+            <div id=@idConc data="@img">
+                @* <a><img src="@img" width="64" height="48" /></a> *@
+            </div>
+
+            i++;
+        }
+
+    }
+}
+
 <title>@ViewBag.Title</title>
 
 <div id="map" style="height: 600px; width: 100%;"></div>
@@ -90,6 +113,9 @@
             var modelImageData = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))';
             var advertsImageData = JSON.parse(modelImageData);
 
+            //var dataImg = function () { return '@Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))'; }();
+            //var advertsDataImg = JSON.parse(dataImg);
+
             var modelTitles = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Title)))';
             var sanitizedModelTitles = modelTitles.replace(/[\u0000-\u0019]+/g, ""); // Replace control characters
             var advertsTitle = JSON.parse(sanitizedModelTitles);
@@ -105,20 +131,35 @@
             var advertsPrices = JSON.parse(modelPrices);
 
             let arrayMarkers = [];
+            let imgArray = [];
             let rows = advertsZipCode.length;
 
 
             for (let i = 0; i < rows; i++) {
                 arrayMarkers[i] = [];
+                imgArray[i] = [];
                 arrayMarkers[i][0] = advertsZipCode[i];
                 arrayMarkers[i][1] = advertsTitle[i];
                 arrayMarkers[i][3] = advertsIDs[i];
                 arrayMarkers[i][4] = advertsDescription[i];
                 arrayMarkers[i][5] = advertsPrices[i];
 
-                var base64 = btoa(String.fromCharCode.apply(null, advertsImageData));
-                var img = "data:image/jpeg;base64," + base64;
-                arrayMarkers[i][2] = img;
+                let text1 = "injectedData";
+                let text2 = i.toString();
+                let result = text1.concat(text2);
+                var injectedData = document.getElementById(result);
+                var InputOldStyle = injectedData.getAttribute("data");
+
+                // imgArray = btoa(String.fromCharCode.apply(null, advertsImageData));
+                // var img = "data:image/jpeg;base64," + imgArray[i];
+                // const blob = new Blob([img], { type: 'image/jpeg' });
+                // const imageUrl = URL.createObjectURL(blob);
+                // var imageURLSubstr = imageUrl.substring(imageUrl.indexOf(':') + 1);
+
+                //arrayMarkers[i][2] = imageURLSubstr;
+                //arrayMarkers[i][2] = img;
+                arrayMarkers[i][2] = InputOldStyle;
+
 
                 console.log(arrayMarkers[i]);
             }
@@ -139,7 +180,7 @@
 
                         google.maps.event.addListener(marker, "click", function () {
                             //infowindow.setContent(results[0].formatted_address);
-                            infowindow.setContent('<img src="' + arrayMarkers[i][2] + '" style="width:128; height:96" /><br><br><a href=../Advert/Advert/' + arrayMarkers[i][3] + '>' + arrayMarkers[i][1] + '</a><br>' + arrayMarkers[i][4] + '<br><br><b>Cena:' + arrayMarkers[i][5] + '</b>');
+                            infowindow.setContent('<img src="' + arrayMarkers[i][2] + '" width="64" height="48" /><br><br><a href=../Advert/Advert/' + arrayMarkers[i][3] + '>' + arrayMarkers[i][1] + '</a><br>' + arrayMarkers[i][4] + '<br><br><b>Cena:' + arrayMarkers[i][5] + '</b>');
                             infowindow.open(map, marker);
                         });
 
@@ -149,10 +190,8 @@
                 });
 
             }
-
         }
 
         initMap();
-
     </script>
     }
