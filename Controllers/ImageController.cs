@@ -11,11 +11,11 @@ namespace AdvertisingPortal.Controllers
     [Authorize]
     public class ImageController : Controller
     {
-        private ImageRepository _imageRepository;
+        private UnitOfWork _unitOfWork;
 
         public ImageController(ApplicationDbContext context)
         {
-            _imageRepository = new ImageRepository(context);
+            _unitOfWork = new UnitOfWork(context);
         }
 
 
@@ -39,8 +39,10 @@ namespace AdvertisingPortal.Controllers
                 ms.Close();
                 ms.Dispose();
 
-                _imageRepository.AddImage(image);
+                _unitOfWork.Image.AddImage(image);
             }
+
+            _unitOfWork.Complete();
 
             return RedirectToAction("Advert", "Advert", new { id = imgVM.Image.AdvertId });
         }
@@ -51,7 +53,8 @@ namespace AdvertisingPortal.Controllers
             try
             {
                 var userId = User.GetUserId();
-                _imageRepository.DeleteImage(id, userId);
+                _unitOfWork.Image.DeleteImage(id, userId);
+                _unitOfWork.Complete();
             }
             catch (Exception ex)
             {
@@ -65,7 +68,7 @@ namespace AdvertisingPortal.Controllers
         public IActionResult EnlargeShowcaseImage(int id)
         {
             var userId = User.GetUserId();
-            var imageData = _imageRepository.GetImage(id, userId);
+            var imageData = _unitOfWork.Image.GetImage(id, userId);
 
             try
             {

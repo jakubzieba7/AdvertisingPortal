@@ -20,7 +20,6 @@ namespace AdvertisingPortal.Persistence.Repositories
         public void AddImage(Image image)
         {
             _context.Images.Add(image);
-            _context.SaveChanges();
         }
 
         public void DeleteImage(int id, string userId)
@@ -28,7 +27,6 @@ namespace AdvertisingPortal.Persistence.Repositories
             var imageToDelete = _context.Images.Single(x => x.Id == id && x.UserId==userId);
 
             _context.Images.Remove(imageToDelete);
-            _context.SaveChanges();
         }
 
         public byte[] GetImage(int id, string userId)

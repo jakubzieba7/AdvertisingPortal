@@ -12,13 +12,11 @@ namespace AdvertisingPortal.Controllers
     [Authorize]
     public class AdvertController : Controller
     {
-        private AdvertRepository _advertRepository;
-        private CategoryRepository _categoryRepository;
+        private UnitOfWork _unitOfWork;
 
         public AdvertController(ApplicationDbContext context)
         {
-            _advertRepository = new AdvertRepository(context);
-            _categoryRepository = new CategoryRepository(context);
+            _unitOfWork = new UnitOfWork(context);
         }
         public IActionResult Adverts()
         {
@@ -26,10 +24,10 @@ namespace AdvertisingPortal.Controllers
 
             var vm = new AdvertsViewModel()
             {
-                Adverts = _advertRepository.GetAdverts(userId),
-                Categories = _categoryRepository.GetCategories(),
-                ItemServiceCategories = _categoryRepository.GetItemServiceCategories(),
-                BuySellCategories = _categoryRepository.GetBuySellCategories(),
+                Adverts = _unitOfWork.Advert.GetAdverts(userId),
+                Categories = _unitOfWork.Category.GetCategories(),
+                ItemServiceCategories = _unitOfWork.Category.GetItemServiceCategories(),
+                BuySellCategories = _unitOfWork.Category.GetBuySellCategories(),
                 FilterAdverts = new FilterAdverts()
             };
 
@@ -39,15 +37,15 @@ namespace AdvertisingPortal.Controllers
         public IActionResult Advert(int id = 0)
         {
             var userId = User.GetUserId();
-            var advert = id == 0 ? new Advert { Id = 0, UserId = userId, AdvertDate = DateTime.Now } : _advertRepository.GetAdvert(id, userId);
+            var advert = id == 0 ? new Advert { Id = 0, UserId = userId, AdvertDate = DateTime.Now } : _unitOfWork.Advert.GetAdvert(id, userId);
 
             var vm = new AdvertViewModel()
             {
                 Heading = id == 0 ? "Dodawanie nowego ogłoszenia" : "Edycja ogłoszenia",
                 Advert = advert,
-                Categories = _categoryRepository.GetCategories(),
-                BuySellCategories = _categoryRepository.GetBuySellCategories(),
-                ItemServiceCategories = _categoryRepository.GetItemServiceCategories()
+                Categories = _unitOfWork.Category.GetCategories(),
+                BuySellCategories = _unitOfWork.Category.GetBuySellCategories(),
+                ItemServiceCategories = _unitOfWork.Category.GetItemServiceCategories()
             };
 
             return View(vm);
@@ -74,9 +72,9 @@ namespace AdvertisingPortal.Controllers
                 var vm = new AdvertViewModel
                 {
                     Advert = advert,
-                    Categories = _categoryRepository.GetCategories(),
-                    BuySellCategories = _categoryRepository.GetBuySellCategories(),
-                    ItemServiceCategories = _categoryRepository.GetItemServiceCategories(),
+                    Categories = _unitOfWork.Category.GetCategories(),
+                    BuySellCategories = _unitOfWork.Category.GetBuySellCategories(),
+                    ItemServiceCategories = _unitOfWork.Category.GetItemServiceCategories(),
                     Heading = advert.Id == 0 ? "Dodawanie nowego ogłoszenia" : "Edytowanie ogłoszenia"
                 };
 
@@ -84,9 +82,11 @@ namespace AdvertisingPortal.Controllers
             }
 
             if (advert.Id == 0)
-                _advertRepository.Add(advert);
+                _unitOfWork.Advert.Add(advert);
             else
-                _advertRepository.Update(advert);
+                _unitOfWork.Advert.Update(advert);
+
+            _unitOfWork.Complete();
 
             return RedirectToAction("Adverts");
         }
@@ -96,7 +96,9 @@ namespace AdvertisingPortal.Controllers
         {
             var userId = User.GetUserId();
 
-            var adverts = _advertRepository.GetAdverts(userId, viewModel.FilterAdverts.Title, viewModel.FilterAdverts.CategoryId, viewModel.FilterAdverts.BuySellCategoryId, viewModel.FilterAdverts.ItemServiceCategoryId, viewModel.FilterAdverts.PriceMin.Value, viewModel.FilterAdverts.PriceMax.Value, viewModel.FilterAdverts.IsFinished, viewModel.FilterAdverts.IsPromoted);
+            var adverts = _unitOfWork.Advert.GetAdverts(userId, viewModel.FilterAdverts.Title, viewModel.FilterAdverts.CategoryId, viewModel.FilterAdverts.BuySellCategoryId, viewModel.FilterAdverts.ItemServiceCategoryId, viewModel.FilterAdverts.PriceMin.Value, viewModel.FilterAdverts.PriceMax.Value, viewModel.FilterAdverts.IsFinished, viewModel.FilterAdverts.IsPromoted);
+
+            _unitOfWork.Complete();
 
             return PartialView("_AdvertsTable", adverts);
         }
@@ -107,7 +109,8 @@ namespace AdvertisingPortal.Controllers
             try
             {
                 var userId = User.GetUserId();
-                _advertRepository.Delete(id, userId);
+                _unitOfWork.Advert.Delete(id, userId);
+                _unitOfWork.Complete();
             }
             catch (Exception ex)
             {

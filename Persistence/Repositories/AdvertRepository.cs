@@ -56,7 +56,6 @@ namespace AdvertisingPortal.Persistence.Repositories
         public void Add(Advert advert)
         {
             _context.Adverts.Add(advert);
-            _context.SaveChanges();
         }
 
         public void Update(Advert advert)
@@ -73,8 +72,6 @@ namespace AdvertisingPortal.Persistence.Repositories
             advertToUpdate.Price = advert.Price;
             advertToUpdate.Location = advert.Location;
             advertToUpdate.ZipCode = advert.ZipCode;
-
-            _context.SaveChanges();
         }
 
         public void Delete(int id, string userId)
@@ -82,7 +79,6 @@ namespace AdvertisingPortal.Persistence.Repositories
             var advertToRemove = _context.Adverts.Single(x => x.Id == id && x.UserId == userId);
 
             _context.Adverts.Remove(advertToRemove);
-            _context.SaveChanges();
         }
 
         
