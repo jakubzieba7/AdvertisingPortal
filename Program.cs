@@ -1,6 +1,6 @@
 using AdvertisingPortal.Core.Models.Domains;
 using AdvertisingPortal.Persistence;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdvertisingPortal
@@ -10,8 +10,14 @@ namespace AdvertisingPortal
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            //var secretConnectionString = builder.Configuration["AdvertisingPortalDatabase:ConnectionStringFull"];
+
+            //var conStrBuilder = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("DefaultConnection"));
+            //conStrBuilder.Password = builder.Configuration["AdvertisingPortalDatabase:Password"];
+            //var connection = conStrBuilder.ConnectionString;
 
             // Add services to the container.
+            //var connectionString = builder.Configuration.GetConnectionString(connection) ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -46,7 +52,9 @@ namespace AdvertisingPortal
                 name: "default",
                 pattern: "{controller=Advert}/{action=Adverts}/{id?}");
             app.MapRazorPages();
-
+            
+            //app.MapGet("/", () => connection);
+            
             app.Run();
         }
     }
