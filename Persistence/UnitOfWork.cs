@@ -9,6 +9,9 @@ namespace AdvertisingPortal.Persistence
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
+            Advert=new AdvertRepository(context);
+            Category = new CategoryRepository(context);
+            Image = new ImageRepository(context);
         }
 
         public AdvertRepository Advert { get; set; }

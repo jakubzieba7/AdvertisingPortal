@@ -3,6 +3,7 @@ using AdvertisingPortal.Core.ViewModels;
 using AdvertisingPortal.Persistence;
 using AdvertisingPortal.Persistence.Extensions;
 using AdvertisingPortal.Persistence.Repositories;
+using AdvertisingPortal.Persistence.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +12,11 @@ namespace AdvertisingPortal.Controllers
     [Authorize]
     public class ImageController : Controller
     {
-        private UnitOfWork _unitOfWork;
+        private ImageService _imageService;
 
         public ImageController(ApplicationDbContext context)
         {
-            _unitOfWork = new UnitOfWork(context);
+            _imageService = new ImageService(new UnitOfWork(context));
         }
 
 
@@ -39,10 +40,8 @@ namespace AdvertisingPortal.Controllers
                 ms.Close();
                 ms.Dispose();
 
-                _unitOfWork.Image.AddImage(image);
+                _imageService.AddImage(image);
             }
-
-            _unitOfWork.Complete();
 
             return RedirectToAction("Advert", "Advert", new { id = imgVM.Image.AdvertId });
         }
@@ -53,8 +52,7 @@ namespace AdvertisingPortal.Controllers
             try
             {
                 var userId = User.GetUserId();
-                _unitOfWork.Image.DeleteImage(id, userId);
-                _unitOfWork.Complete();
+                _imageService.DeleteImage(id, userId);
             }
             catch (Exception ex)
             {
@@ -68,7 +66,7 @@ namespace AdvertisingPortal.Controllers
         public IActionResult EnlargeShowcaseImage(int id)
         {
             var userId = User.GetUserId();
-            var imageData = _unitOfWork.Image.GetImage(id, userId);
+            var imageData = _imageService.GetImage(id, userId);
 
             try
             {
