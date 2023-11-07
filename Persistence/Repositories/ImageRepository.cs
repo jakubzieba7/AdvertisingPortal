@@ -1,13 +1,15 @@
-﻿using AdvertisingPortal.Core.Models.Domains;
+﻿using AdvertisingPortal.Core;
+using AdvertisingPortal.Core.Models.Domains;
+using AdvertisingPortal.Core.Repositories;
 using AdvertisingPortal.Core.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdvertisingPortal.Persistence.Repositories
 {
-    public class ImageRepository
+    public class ImageRepository: IImageRepository
     {
-        private ApplicationDbContext _context;
-        public ImageRepository(ApplicationDbContext context)
+        private IApplicationDBContext _context;
+        public ImageRepository(IApplicationDBContext context)
         {
             _context = context;
         }

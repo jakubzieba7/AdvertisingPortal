@@ -1,5 +1,6 @@
 ﻿using AdvertisingPortal.Core.Models;
 using AdvertisingPortal.Core.Models.Domains;
+using AdvertisingPortal.Core.Services;
 using AdvertisingPortal.Core.ViewModels;
 using AdvertisingPortal.Persistence;
 using AdvertisingPortal.Persistence.Extensions;
@@ -13,13 +14,13 @@ namespace AdvertisingPortal.Controllers
     [Authorize]
     public class AdvertController : Controller
     {
-        private readonly AdvertService _advertService;
-        private readonly CategoryService _categoryService;
+        private readonly IAdvertService _advertService;
+        private readonly ICategoryService _categoryService;
 
-        public AdvertController(ApplicationDbContext context)
+        public AdvertController(IAdvertService advertService, ICategoryService categoryService)
         {
-            _advertService = new AdvertService(new UnitOfWork(context));
-            _categoryService=new CategoryService(new UnitOfWork(context));
+            _advertService = advertService;
+            _categoryService= categoryService;
         }
         public IActionResult Adverts()
         {

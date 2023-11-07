@@ -1,12 +1,14 @@
-﻿using AdvertisingPortal.Core.Models.Domains;
+﻿using AdvertisingPortal.Core;
+using AdvertisingPortal.Core.Models.Domains;
+using AdvertisingPortal.Core.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdvertisingPortal.Persistence.Services
 {
-    public class CategoryService
+    public class CategoryService: ICategoryService
     {
-        private readonly UnitOfWork _unitOfWork;
-        public CategoryService(UnitOfWork unitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

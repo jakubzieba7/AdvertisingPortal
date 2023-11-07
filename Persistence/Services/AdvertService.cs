@@ -1,13 +1,15 @@
-﻿using AdvertisingPortal.Core.Models.Domains;
+﻿using AdvertisingPortal.Core;
+using AdvertisingPortal.Core.Models.Domains;
+using AdvertisingPortal.Core.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdvertisingPortal.Persistence.Services
 {
-    public class AdvertService
+    public class AdvertService: IAdvertService
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AdvertService(UnitOfWork unitOfWork)
+        public AdvertService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

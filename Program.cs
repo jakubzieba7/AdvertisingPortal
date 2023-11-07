@@ -1,5 +1,8 @@
+using AdvertisingPortal.Core;
 using AdvertisingPortal.Core.Models.Domains;
+using AdvertisingPortal.Core.Services;
 using AdvertisingPortal.Persistence;
+using AdvertisingPortal.Persistence.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +13,13 @@ namespace AdvertisingPortal
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddScoped<IAdvertService, AdvertService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IImageService, ImageService>();
+            builder.Services.AddScoped<IApplicationDBContext, ApplicationDbContext>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             //var secretConnectionString = builder.Configuration["AdvertisingPortalDatabase:ConnectionStringFull"];
 
             //var conStrBuilder = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("DefaultConnection"));

@@ -1,12 +1,14 @@
-﻿using AdvertisingPortal.Persistence.Repositories;
+﻿using AdvertisingPortal.Core;
+using AdvertisingPortal.Core.Repositories;
+using AdvertisingPortal.Persistence.Repositories;
 
 namespace AdvertisingPortal.Persistence
 {
-    public class UnitOfWork
+    public class UnitOfWork: IUnitOfWork
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDBContext _context;
 
-        public UnitOfWork(ApplicationDbContext context)
+        public UnitOfWork(IApplicationDBContext context)
         {
             _context = context;
             Advert=new AdvertRepository(context);
@@ -14,9 +16,9 @@ namespace AdvertisingPortal.Persistence
             Image = new ImageRepository(context);
         }
 
-        public AdvertRepository Advert { get; set; }
-        public CategoryRepository Category { get; set; }
-        public ImageRepository Image { get; set; }
+        public IAdvertRepository Advert { get; set; }
+        public ICategoryRepository Category { get; set; }
+        public IImageRepository Image { get; set; }
 
         public void Complete()
         {

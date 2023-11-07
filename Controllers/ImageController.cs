@@ -1,4 +1,5 @@
 ﻿using AdvertisingPortal.Core.Models.Domains;
+using AdvertisingPortal.Core.Services;
 using AdvertisingPortal.Core.ViewModels;
 using AdvertisingPortal.Persistence;
 using AdvertisingPortal.Persistence.Extensions;
@@ -12,11 +13,11 @@ namespace AdvertisingPortal.Controllers
     [Authorize]
     public class ImageController : Controller
     {
-        private ImageService _imageService;
+        private readonly IImageService _imageService;
 
-        public ImageController(ApplicationDbContext context)
+        public ImageController(IImageService imageService)
         {
-            _imageService = new ImageService(new UnitOfWork(context));
+            _imageService = imageService;
         }
 
 

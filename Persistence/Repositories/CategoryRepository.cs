@@ -1,12 +1,14 @@
-﻿using AdvertisingPortal.Core.Models.Domains;
+﻿using AdvertisingPortal.Core;
+using AdvertisingPortal.Core.Models.Domains;
+using AdvertisingPortal.Core.Repositories;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace AdvertisingPortal.Persistence.Repositories
 {
-    public class CategoryRepository
+    public class CategoryRepository: ICategoryRepository
     {
-        private ApplicationDbContext _context;
-        public CategoryRepository(ApplicationDbContext context)
+        private IApplicationDBContext _context;
+        public CategoryRepository(IApplicationDBContext context)
         {
             _context = context;
         }

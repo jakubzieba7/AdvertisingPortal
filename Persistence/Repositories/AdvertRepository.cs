@@ -1,14 +1,15 @@
 ﻿using AdvertisingPortal.Core.Models;
 using AdvertisingPortal.Core.Models.Domains;
 using AdvertisingPortal.Core.ViewModels;
+using AdvertisingPortal.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdvertisingPortal.Persistence.Repositories
+namespace AdvertisingPortal.Core.Repositories
 {
-    public class AdvertRepository
+    public class AdvertRepository : IAdvertRepository
     {
-        private ApplicationDbContext _context;
-        public AdvertRepository(ApplicationDbContext context)
+        private IApplicationDBContext _context;
+        public AdvertRepository(IApplicationDBContext context)
         {
             _context = context;
         }
@@ -16,7 +17,7 @@ namespace AdvertisingPortal.Persistence.Repositories
         public IEnumerable<Advert> GetAdverts(string userId, string title = null, int categoryId = 0, int buySellCategoryId = 0, int itemServiceCategoryId = 0, decimal priceMin = 0, decimal priceMax = 0, bool IsFinished = false, bool isPromoted = false)
         {
             var adverts = _context.Adverts.
-                Include(x=>x.Images).
+                Include(x => x.Images).
                 Include(x => x.Category).
                 Include(x => x.BuySellCategory).
                 Include(x => x.ItemServiceCategory).
@@ -41,7 +42,7 @@ namespace AdvertisingPortal.Persistence.Repositories
                 adverts = adverts.Where(x => x.Price >= priceMin);
 
             if (priceMax != 0)
-                adverts=adverts.Where(x => x.Price <= priceMax);
+                adverts = adverts.Where(x => x.Price <= priceMax);
 
             return adverts.OrderBy(x => x.AdvertDate).ToList();
         }
@@ -49,7 +50,7 @@ namespace AdvertisingPortal.Persistence.Repositories
         public Advert GetAdvert(int id, string userId)
         {
             return _context.Adverts.
-                Include(x=>x.Images).
+                Include(x => x.Images).
                 Single(x => x.Id == id && x.UserId == userId);
         }
 
@@ -81,6 +82,6 @@ namespace AdvertisingPortal.Persistence.Repositories
             _context.Adverts.Remove(advertToRemove);
         }
 
-        
+
     }
 }
