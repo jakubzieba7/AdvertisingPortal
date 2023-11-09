@@ -8,41 +8,41 @@ namespace AdvertisingPortal.Core.Repositories
 {
     public class AdvertRepository : IAdvertRepository
     {
-        private IApplicationDBContext _context;
+        private readonly IApplicationDBContext _context;
         public AdvertRepository(IApplicationDBContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<Advert> GetAdverts(string userId, string title = null, int categoryId = 0, int buySellCategoryId = 0, int itemServiceCategoryId = 0, decimal priceMin = 0, decimal priceMax = 0, bool IsFinished = false, bool isPromoted = false)
+        public IEnumerable<Advert> GetAdverts(GetAdvertsParams getAdvertsParams)
         {
             var adverts = _context.Adverts.
                 Include(x => x.Images).
                 Include(x => x.Category).
                 Include(x => x.BuySellCategory).
                 Include(x => x.ItemServiceCategory).
-                Where(x => x.UserId == userId && x.IsFinished == IsFinished);
+                Where(x => x.UserId == getAdvertsParams.UserId && x.IsFinished == getAdvertsParams.IsFinished);
 
-            if (buySellCategoryId != 0)
-                adverts = adverts.Where(x => x.BuySellCategoryId == buySellCategoryId);
+            if (getAdvertsParams.BuySellCategoryId != 0)
+                adverts = adverts.Where(x => x.BuySellCategoryId == getAdvertsParams.BuySellCategoryId);
 
-            if (itemServiceCategoryId != 0)
-                adverts = adverts.Where(x => x.ItemServiceCategoryId == itemServiceCategoryId);
+            if (getAdvertsParams.ItemServiceCategoryId != 0)
+                adverts = adverts.Where(x => x.ItemServiceCategoryId == getAdvertsParams.ItemServiceCategoryId);
 
-            if (categoryId != 0)
-                adverts = adverts.Where(x => x.CategoryId == categoryId);
+            if (getAdvertsParams.CategoryId != 0)
+                adverts = adverts.Where(x => x.CategoryId == getAdvertsParams.CategoryId);
 
-            if (isPromoted)
-                adverts = adverts.Where(x => x.IsPromoted == isPromoted);
+            if (getAdvertsParams.IsPromoted)
+                adverts = adverts.Where(x => x.IsPromoted == getAdvertsParams.IsPromoted);
 
-            if (!string.IsNullOrWhiteSpace(title))
-                adverts = adverts.Where(x => x.Title.Contains(title));
+            if (!string.IsNullOrWhiteSpace(getAdvertsParams.Title))
+                adverts = adverts.Where(x => x.Title.Contains(getAdvertsParams.Title));
 
-            if (priceMin != 0)
-                adverts = adverts.Where(x => x.Price >= priceMin);
+            if (getAdvertsParams.PriceMin != 0)
+                adverts = adverts.Where(x => x.Price >= getAdvertsParams.PriceMin);
 
-            if (priceMax != 0)
-                adverts = adverts.Where(x => x.Price <= priceMax);
+            if (getAdvertsParams.PriceMax != 0)
+                adverts = adverts.Where(x => x.Price <= getAdvertsParams.PriceMax);
 
             return adverts.OrderBy(x => x.AdvertDate).ToList();
         }

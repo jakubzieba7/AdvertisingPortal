@@ -16,19 +16,32 @@ namespace AdvertisingPortal.Controllers
     {
         private readonly IAdvertService _advertService;
         private readonly ICategoryService _categoryService;
+        private readonly GetAdvertsParams _getAdvertsParams;
 
         public AdvertController(IAdvertService advertService, ICategoryService categoryService)
         {
             _advertService = advertService;
-            _categoryService= categoryService;
+            _categoryService = categoryService;
+            _getAdvertsParams = new GetAdvertsParams()
+            {
+                Title = null,
+                CategoryId = 0,
+                BuySellCategoryId = 0,
+                ItemServiceCategoryId = 0,
+                PriceMin = 0,
+                PriceMax = 0,
+                IsFinished = false,
+                IsPromoted = false
+
+            };
         }
         public IActionResult Adverts()
         {
-            var userId = User.GetUserId();
+            _getAdvertsParams.UserId = User.GetUserId();
 
             var vm = new AdvertsViewModel()
             {
-                Adverts = _advertService.GetAdverts(userId),
+                Adverts = _advertService.GetAdverts(_getAdvertsParams),
                 Categories = _categoryService.GetCategories(),
                 ItemServiceCategories = _categoryService.GetItemServiceCategories(),
                 BuySellCategories = _categoryService.GetBuySellCategories(),
@@ -58,7 +71,7 @@ namespace AdvertisingPortal.Controllers
         public IActionResult UploadImage(int advertId, int imageId = 0)
         {
             var userId = User.GetUserId();
-            var advertImage = new Image() { Id = imageId, AdvertId = advertId, UserId=userId };
+            var advertImage = new Image() { Id = imageId, AdvertId = advertId, UserId = userId };
             var vm = new AdvertImagesViewModel() { Heading = "Nowe zdjęcia", Image = advertImage };
 
             return View("AdvertImageLoad", vm);
@@ -96,9 +109,9 @@ namespace AdvertisingPortal.Controllers
         [HttpPost]
         public IActionResult Adverts(AdvertsViewModel viewModel)
         {
-            var userId = User.GetUserId();
+            viewModel.FilterAdverts.GetAdvertsParams.UserId = User.GetUserId();
 
-            var adverts = _advertService.GetAdverts(userId, viewModel.FilterAdverts.Title, viewModel.FilterAdverts.CategoryId, viewModel.FilterAdverts.BuySellCategoryId, viewModel.FilterAdverts.ItemServiceCategoryId, viewModel.FilterAdverts.PriceMin.Value, viewModel.FilterAdverts.PriceMax.Value, viewModel.FilterAdverts.IsFinished, viewModel.FilterAdverts.IsPromoted);
+            var adverts = _advertService.GetAdverts(viewModel.FilterAdverts.GetAdvertsParams);
 
             return PartialView("_AdvertsTable", adverts);
         }

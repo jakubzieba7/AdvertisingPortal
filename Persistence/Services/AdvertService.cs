@@ -1,4 +1,5 @@
 ﻿using AdvertisingPortal.Core;
+using AdvertisingPortal.Core.Models;
 using AdvertisingPortal.Core.Models.Domains;
 using AdvertisingPortal.Core.Services;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,9 @@ namespace AdvertisingPortal.Persistence.Services
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Advert> GetAdverts(string userId, string title = null, int categoryId = 0, int buySellCategoryId = 0, int itemServiceCategoryId = 0, decimal priceMin = 0, decimal priceMax = 0, bool IsFinished = false, bool isPromoted = false)
+        public IEnumerable<Advert> GetAdverts(GetAdvertsParams getAdvertsParams)
         {
-            return _unitOfWork.Advert.GetAdverts(userId, title, categoryId, buySellCategoryId, itemServiceCategoryId, priceMin, priceMax, IsFinished, isPromoted);
+            return _unitOfWork.Advert.GetAdverts(getAdvertsParams);
         }
 
         public Advert GetAdvert(int id, string userId)

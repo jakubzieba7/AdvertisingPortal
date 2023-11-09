@@ -17,7 +17,7 @@
             var img = String.Format("data:image/jpg;base64,{0}", base64);
             
             <div id=@idConc data="@img">
-                @* <a><img src="@img" width="64" height="48" /></a> *@
+                <a><img src="@img" width="64" height="48" /></a>
             </div>
 
             i++;
@@ -109,10 +109,10 @@
             var modelZipCodes = '@Html.Raw(Json.Serialize(Model.Select(x=>x.ZipCode)))';
             var advertsZipCode = JSON.parse(modelZipCodes);
 
-            var modelImageData = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))';
-            var advertsImageData = JSON.parse(modelImageData);
+            // var modelImageData = 'Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))';
+            // var advertsImageData = JSON.parse(modelImageData);
 
-            //var dataImg = function () { return '@Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))'; }();
+            //var dataImg = function () { return 'Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))'; }();
             //var advertsDataImg = JSON.parse(dataImg);
 
             var modelTitles = '@Html.Raw(Json.Serialize(Model.Select(x=>x.Title)))';

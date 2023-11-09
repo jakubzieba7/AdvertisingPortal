@@ -9,48 +9,48 @@
 <form id="filterForm">
     <div class="row gx-3 gy-2 align-items-center">
         <div class="col-sm-3">
-            @Html.TextBoxFor(x => x.FilterAdverts.Title, new { @class = "form-control mb-2", placeholder = "Tytuł" })
+            @Html.TextBoxFor(x => x.FilterAdverts.GetAdvertsParams.Title, new { @class = "form-control mb-2", placeholder = "Tytuł" })
         </div>
         <div class="col-sm-3">
-            @Html.DropDownListFor(x => x.FilterAdverts.BuySellCategoryId,
+            @Html.DropDownListFor(x => x.FilterAdverts.GetAdvertsParams.BuySellCategoryId,
             new SelectList(Model.BuySellCategories, "Id", "Name"),
             "-- wybierz kategorię --",
             new { @class = "form-control mb-2" })
         </div>
         <div class="col-sm-3">
-            @Html.DropDownListFor(x => x.FilterAdverts.ItemServiceCategoryId,
+            @Html.DropDownListFor(x => x.FilterAdverts.GetAdvertsParams.ItemServiceCategoryId,
             new SelectList(Model.ItemServiceCategories, "Id", "Name"),
             "-- wybierz kategorię --",
             new { @class = "form-control mb-2" })
         </div>
         <div class="col-sm-3">
-            @Html.DropDownListFor(x => x.FilterAdverts.CategoryId,
+            @Html.DropDownListFor(x => x.FilterAdverts.GetAdvertsParams.CategoryId,
             new SelectList(Model.Categories, "Id", "Name"),
             "-- wybierz kategorię --",
             new { @class = "form-control mb-2" })
         </div>
         <div class="col-sm-3">
-            @Html.TextBoxFor(x => x.FilterAdverts.PriceMin,
+            @Html.TextBoxFor(x => x.FilterAdverts.GetAdvertsParams.PriceMin,
             new { @class = "form-control mb-2", placeholder = "Cena min" })
         </div>
         <div class="col-sm-3">
-            @Html.TextBoxFor(x => x.FilterAdverts.PriceMax,
-            new { @class = "form-control mb-2", placeholder = Html.DisplayNameFor(m => m.FilterAdverts.PriceMax) })
+            @Html.TextBoxFor(x => x.FilterAdverts.GetAdvertsParams.PriceMax,
+            new { @class = "form-control mb-2", placeholder = Html.DisplayNameFor(m => m.FilterAdverts.GetAdvertsParams.PriceMax) })
         </div>
         <div class="col-sm-2">
             <div class="form-check mb-2">
-                @Html.CheckBoxFor(x => x.FilterAdverts.IsFinished,
+                @Html.CheckBoxFor(x => x.FilterAdverts.GetAdvertsParams.IsFinished,
                 new { @class = "form-check-label" })
 
-                @Html.LabelFor(x => x.FilterAdverts.IsFinished)
+                @Html.LabelFor(x => x.FilterAdverts.GetAdvertsParams.IsFinished)
             </div>
         </div>
         <div class="col-sm-2">
             <div class="form-check mb-2">
-                @Html.CheckBoxFor(x => x.FilterAdverts.IsPromoted,
+                @Html.CheckBoxFor(x => x.FilterAdverts.GetAdvertsParams.IsPromoted,
                 new { @class = "form-check-label" })
 
-                @Html.LabelFor(x => x.FilterAdverts.IsPromoted)
+                @Html.LabelFor(x => x.FilterAdverts.GetAdvertsParams.IsPromoted)
             </div>
         </div>
 
