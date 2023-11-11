@@ -1,5 +1,6 @@
 ﻿using AdvertisingPortal.Core.Models.Domains;
 using AdvertisingPortal.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdvertisingPortal.Core.Services
 {
@@ -10,5 +11,12 @@ namespace AdvertisingPortal.Core.Services
         IEnumerable<Category> GetCategories();
 
         public IEnumerable<ItemServiceCategory> GetItemServiceCategories();
+
+        public void AddCategory(Category category);
+
+        public void AddItemServiceCategory(ItemServiceCategory itemServiceCategory);
+
+        public void AddBuySellCategory(BuySellCategory buySellCategory);
+
     }
 }

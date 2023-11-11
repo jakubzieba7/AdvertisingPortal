@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace AdvertisingPortal.Persistence.Repositories
 {
-    public class CategoryRepository: ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private IApplicationDBContext _context;
         public CategoryRepository(IApplicationDBContext context)
@@ -19,12 +19,27 @@ namespace AdvertisingPortal.Persistence.Repositories
 
         public IEnumerable<Category> GetCategories()
         {
-            return _context.Categories.OrderBy(x=>x.Name).ToList();
+            return _context.Categories.OrderBy(x => x.Name).ToList();
         }
 
         public IEnumerable<ItemServiceCategory> GetItemServiceCategories()
         {
             return _context.ItemServiceCategories.ToList();
+        }
+
+        public void AddCategory(Category category)
+        {
+            _context.Categories.Add(category);
+        }
+
+        public void AddItemServiceCategory(ItemServiceCategory itemServiceCategory)
+        {
+            _context.ItemServiceCategories.Add(itemServiceCategory);
+        }
+
+        public void AddBuySellCategory(BuySellCategory buySellCategory)
+        {
+            _context.BuySellCategories.Add(buySellCategory);
         }
     }
 }

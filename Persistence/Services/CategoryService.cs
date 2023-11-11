@@ -27,5 +27,23 @@ namespace AdvertisingPortal.Persistence.Services
         {
             return _unitOfWork.Category.GetItemServiceCategories();
         }
+
+        public void AddCategory(Category category)
+        {
+            _unitOfWork.Category.AddCategory(category);
+            _unitOfWork.Complete();
+        }
+
+        public void AddItemServiceCategory(ItemServiceCategory itemServiceCategory)
+        {
+            _unitOfWork.Category.AddItemServiceCategory(itemServiceCategory);
+            _unitOfWork.Complete();
+        }
+
+        public void AddBuySellCategory(BuySellCategory buySellCategory)
+        {
+            _unitOfWork.Category.AddBuySellCategory(buySellCategory);
+            _unitOfWork.Complete();
+        }
     }
 }

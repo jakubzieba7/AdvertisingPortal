@@ -5,6 +5,7 @@ using AdvertisingPortal.Persistence;
 using AdvertisingPortal.Persistence.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace AdvertisingPortal
 {
