@@ -17,9 +17,18 @@
             var img = String.Format("data:image/jpg;base64,{0}", base64);
             
             <div id=@idConc data="@img">
-                @* <a><img src="@img" width="64" height="48" /></a> *@
+            @* <a><img src="@img" width="64" height="48" /></a> *@
             </div>
-
+            i++;
+        }
+        else
+        {
+            var idConc = string.Concat("injectedData", i);
+            var img = "data:image/jpg;base64,null";
+        
+            <div id=@idConc data="@img">
+            @* <a><img src="@img" width="64" height="48" /></a> *@
+            </div>
             i++;
         }
 
@@ -157,8 +166,7 @@
 
                 //arrayMarkers[i][2] = imageURLSubstr;
                 //arrayMarkers[i][2] = img;
-                arrayMarkers[i][2] = InputOldStyle;
-
+                arrayMarkers[i][2] = InputOldStyle
 
                 console.log(arrayMarkers[i]);
             }
