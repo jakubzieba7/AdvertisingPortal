@@ -12,10 +12,10 @@ namespace AdvertisingPortal.Core.Repositories
 
         IEnumerable<ItemServiceCategory> GetItemServiceCategories();
 
-        public void AddCategory(Category category);
+        void AddCategory(Category category);
 
-        public void AddItemServiceCategory(ItemServiceCategory itemServiceCategory);
+        void AddItemServiceCategory(ItemServiceCategory itemServiceCategory);
 
-        public void AddBuySellCategory(BuySellCategory buySellCategory);
+        void AddBuySellCategory(BuySellCategory buySellCategory);
     }
 }

@@ -55,10 +55,10 @@
         </div>
 
         <div class="col-sm-1">
-            <button class="btn btn-secondary mt-5 mb-5" onclick='window.location.href="@Url.Action("AdvertsMap","Map")"'>Mapa</button>
+            <button class="btn btn-secondary mt-5 mb-5" onclick='window.location.href="@Url.Action("AdvertsMap","Advert", new{ advertsParams = Model.FilterAdverts.GetAdvertsParams})"'>Mapa</button>
 
         </div>
-
+        
         <div class="col-auto">
             <button type="submit" class="btn btn-primary mt-5 mb-5">Szukaj</button>
         </div>

@@ -16,10 +16,12 @@ namespace AdvertisingPortal.Controllers
     {
         private readonly IAdvertService _advertService;
         private readonly ICategoryService _categoryService;
-        private readonly GetAdvertsParams _getAdvertsParams;
+        private GetAdvertsParams _getAdvertsParams;
+        private readonly IConfiguration _config;
 
-        public AdvertController(IAdvertService advertService, ICategoryService categoryService)
+        public AdvertController(IAdvertService advertService, ICategoryService categoryService, IConfiguration config)
         {
+            _config = config;
             _advertService = advertService;
             _categoryService = categoryService;
             _getAdvertsParams = new GetAdvertsParams()
@@ -114,6 +116,16 @@ namespace AdvertisingPortal.Controllers
             var adverts = _advertService.GetAdverts(viewModel.FilterAdverts.GetAdvertsParams);
 
             return PartialView("_AdvertsTable", adverts);
+        }
+
+        public IActionResult AdvertsMap(GetAdvertsParams advertsParams)
+        {
+            //_getAdvertsParams= advertsParams;
+            _getAdvertsParams.UserId = User.GetUserId();
+            var adverts = _advertService.GetAdverts(_getAdvertsParams);
+            ViewBag.googleMapsApiKey = _config["GoogleMapsAPI:APIKey"];
+
+            return View(adverts);
         }
 
         [HttpPost]
