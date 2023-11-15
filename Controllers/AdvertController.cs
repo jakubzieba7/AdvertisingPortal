@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdvertisingPortal.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class AdvertController : Controller
     {
         private readonly IAdvertService _advertService;
@@ -118,9 +118,9 @@ namespace AdvertisingPortal.Controllers
             return PartialView("_AdvertsTable", adverts);
         }
 
-        public IActionResult AdvertsMap(GetAdvertsParams advertsParams)
+        public IActionResult AdvertsMap(GetAdvertsParams getAdvertsParams)
         {
-            //_getAdvertsParams= advertsParams;
+            //_getAdvertsParams = getAdvertsParams;
             _getAdvertsParams.UserId = User.GetUserId();
             var adverts = _advertService.GetAdverts(_getAdvertsParams);
             ViewBag.googleMapsApiKey = _config["GoogleMapsAPI:APIKey"];
