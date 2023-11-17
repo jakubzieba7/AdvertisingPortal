@@ -40,6 +40,7 @@ namespace AdvertisingPortal.Controllers
         public IActionResult Adverts()
         {
             _getAdvertsParams.UserId = User.GetUserId();
+            ViewBag.UserID=User.GetUserId();
 
             var vm = new AdvertsViewModel()
             {
@@ -60,7 +61,24 @@ namespace AdvertisingPortal.Controllers
 
             var vm = new AdvertViewModel()
             {
-                Heading = id == 0 ? "Dodawanie nowego ogłoszenia" : "Edycja ogłoszenia",
+                Heading = id == 0 ? "Dodawanie nowej oferty" : "Edycja oferty",
+                Advert = advert,
+                Categories = _categoryService.GetCategories(),
+                BuySellCategories = _categoryService.GetBuySellCategories(),
+                ItemServiceCategories = _categoryService.GetItemServiceCategories()
+            };
+
+            return View(vm);
+        }
+
+        public IActionResult AdvertReadOnly(int id)
+        {
+            
+            var advert = _advertService.GetAdvertReadOnly(id);
+
+            var vm = new AdvertViewModel()
+            {
+                Heading = $"Oferta nr {id}",
                 Advert = advert,
                 Categories = _categoryService.GetCategories(),
                 BuySellCategories = _categoryService.GetBuySellCategories(),

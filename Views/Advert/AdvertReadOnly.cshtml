@@ -1,0 +1,249 @@
+﻿@model AdvertisingPortal.Core.ViewModels.AdvertViewModel
+
+<div class="row">
+
+    @{
+        ViewData["Title"] = Model.Heading;
+    }
+
+    <h1>@Model.Heading</h1>
+
+    <div class="col-6">
+        @if (Model.Advert.Id != 0)
+        {
+            <button class="btn btn-primary mt-3 mb-3" onclick='window.location.href="@Url.Action("UploadImage","Advert", new {advertId=Model.Advert.Id})"'>Dodaj zdjęcia</button>
+        }
+
+        @using (Html.BeginForm("Advert", "Advert"))
+        {
+
+            <p class="alert alert-info mt-4 mb-4">Pola tytuł, opis, kategorie, kod pocztowy i cena są <strong>wymagane</strong></p>
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x=>x.Advert.Id)
+
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.Title)
+                @Html.TextBoxFor(x=>x.Advert.Title,new{@class="form-control",autofocus="autofocus"})
+                @Html.ValidationMessageFor(x=>x.Advert.Title)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.Description)
+                @Html.TextAreaFor(x=>x.Advert.Description,new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.Description)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.BuySellCategoryId)
+                @Html.DropDownListFor(x=>x.Advert.BuySellCategoryId,new SelectList(Model.BuySellCategories,"Id","Name"),"-- wybierz kategorię 1 --", new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.BuySellCategoryId)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.ItemServiceCategoryId)
+                @Html.DropDownListFor(x=>x.Advert.ItemServiceCategoryId,new SelectList(Model.ItemServiceCategories,"Id","Name"),"-- wybierz kategorię 2 --", new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.ItemServiceCategoryId)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.CategoryId)
+                @Html.DropDownListFor(x=>x.Advert.CategoryId,new SelectList(Model.Categories,"Id","Name"),"-- wybierz kategorię 3 --", new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.CategoryId)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.AdvertDate)
+                @Html.TextBoxFor(x=>x.Advert.AdvertDate,"{0:dd-MM-yyyy}",new{@class="form-control", @id="AdvertDate", autocomplete="off"})
+                @Html.ValidationMessageFor(x=>x.Advert.AdvertDate)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.Location)
+                @Html.TextBoxFor(x=>x.Advert.Location,new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.Location)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.ZipCode)
+                @Html.TextBoxFor(x=>x.Advert.ZipCode,new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.ZipCode)
+            </div>
+
+            <div class="form-group">
+
+                @Html.LabelFor(x=>x.Advert.Price)
+                @Html.TextBoxFor(x=>x.Advert.Price,new{@class="form-control"})
+                @Html.ValidationMessageFor(x=>x.Advert.Price)
+            </div>
+
+            <div class="form-check">
+                @Html.CheckBoxFor(x=>x.Advert.IsPromoted,new {@class="form-check-input"})
+                @Html.LabelFor(x=>x.Advert.IsPromoted)
+            </div>
+
+            @if (Model.Advert.Id > 0)
+            {
+                <div class="form-check">
+                    @Html.CheckBoxFor(x=>x.Advert.IsFinished,new {@class="form-check-input"})
+                    @Html.LabelFor(x=>x.Advert.IsFinished)
+                </div>
+            }
+
+
+            <button type="submit" class="btn btn-primary btn-lg mt-2">Zapisz</button>
+
+        }
+    </div>
+
+    <div class="col-5 offset-lg-1">
+        @await Html.PartialAsync("_AdvertImagesTable",Model.Advert.Images.Where(x=>x.AdvertId==Model.Advert.Id))
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#AdvertDate').datepicker({
+                format: "dd-mm-yyyy",
+                language: "pl-PL",
+                multidate: false,
+                autoclose: true,
+                todayHighlight: true,
+                startDate: '-3d',
+                weekStart: 1,
+                todayBtn: true,
+                forceParse: false
+            });
+        });
+
+        function deleteImage(id, btn) {
+            if (!confirm("Czy na pewno chcesz usunąć to zdjęcie?"))
+                return;
+
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("DeleteImage","Image")",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    }
+                    else {
+                        alert(data.message);
+                    }
+
+                },
+                error: function (data) {
+                    alert(data.message);
+                },
+                dataType: 'json'
+            });
+        };
+
+
+        $(".big").click(function () {
+            var gallery = $('.gallery a').simpleLightbox({
+
+                // default source attribute
+                sourceAttr: 'href',
+                // shows fullscreen overlay
+                overlay: true,
+                // shows loading spinner
+                spinner: true,
+                // shows navigation arrows
+                nav: true,
+                // text for navigation arrows
+                navText: ['&larr;', '&rarr;'],
+                // shows image captions
+                captions: false,
+                captionDelay: 0,
+                captionSelector: 'img',
+                captionType: 'attr',
+                captionPosition: 'bottom',
+                captionClass: '',
+                captionHTML: false,
+                // captions attribute (title or data-title)
+                captionsData: 'title',
+                // shows close button
+                close: true,
+                // text for close button
+                closeText: 'X',
+                // swipe up or down to close gallery
+                swipeClose: true,
+                // show counter
+                showCounter: true,
+                // file extensions
+                fileExt: 'png|jpg|jpeg|gif',
+                // weather to slide in new photos or not, disable to fade
+                animationSlide: false,
+                // animation speed in ms
+                animationSpeed: 50,
+                // image preloading
+                preloading: true,
+                // keyboard navigation
+                enableKeyboard: true,
+                // endless looping
+                loop: true,
+                // group images by rel attribute of link with same selector
+                rel: false,
+                // closes the lightbox when clicking outside
+                docClose: true,
+                // how much pixel you have to swipe
+                swipeTolerance: 50,
+                // lightbox wrapper Class
+                className: 'simple-lightbox',
+                // width / height ratios
+                widthRatio: 0.8,
+                heightRatio: 0.9,
+                // scales the image up to the defined ratio size
+                scaleImageToRatio: false,
+                // disable right click
+                disableRightClick: false,
+                // show an alert if image was not found
+                alertError: true,
+                // alert message
+                alertErrorMessage: 'Image not found, next image will be loaded',
+                // additional HTML showing inside every image
+                additionalHtml: false,
+                // enable history back closes lightbox instead of reloading the page
+                history: true,
+                // time to wait between slides
+                throttleInterval: 0,
+                // Pinch to <a href="https://www.jqueryscript.net/zoom/">Zoom</a> feature for touch devices
+                doubleTapZoom: 2,
+                maxZoom: 10,
+                // adds class to html element if lightbox is open
+                htmlClass: 'has-lightbox',
+                // RTL mode
+                rtl: false,
+                // elements with this class are fixed and get the right padding when lightbox opens
+                fixedClass: 'sl-fixed',
+                // fade speed in ms
+                fadeSpeed: 300,
+                // whether to uniqualize images
+                uniqueImages: true,
+                // focus the lightbox on open to enable tab control
+                focus: true,
+
+            });
+            gallery.open();
+
+            // alert("Anchor Tag Click Event.");
+        });
+
+    </script>
+}

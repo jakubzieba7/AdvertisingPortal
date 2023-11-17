@@ -45,14 +45,17 @@
                 @Html.LabelFor(x => x.FilterAdverts.GetAdvertsParams.IsFinished)
             </div>
         </div>
-        <div class="col-sm-2">
-            <div class="form-check mb-2">
-                @Html.CheckBoxFor(x => x.FilterAdverts.GetAdvertsParams.IsPromoted,
+        @if (ViewBag.UserID is not null)
+        {
+            <div class="col-sm-2">
+                <div class="form-check mb-2">
+                    @Html.CheckBoxFor(x => x.FilterAdverts.GetAdvertsParams.IsPromoted,
                 new { @class = "form-check-label" ,id="IsPromoted"})
 
-                @Html.LabelFor(x => x.FilterAdverts.GetAdvertsParams.IsPromoted)
+                    @Html.LabelFor(x => x.FilterAdverts.GetAdvertsParams.IsPromoted)
+                </div>
             </div>
-        </div>
+        }
 
         <div class="col-sm-1">
             <button id="advertsMapButton" class="btn btn-secondary mt-5 mb-5" onclick='window.location.href="@Url.Action("AdvertsMap","Advert", new{ getAdvertsParams = Model.FilterAdverts.GetAdvertsParams})"'>Mapa</button>
@@ -96,7 +99,7 @@
             $('#advertsMapButton').click(function () {
                 $.ajax(
                     {
-                        type: "POST", 
+                        type: "POST",
                         url: "Advert/AdvertsMap",
                         data: {
                             PriceMin: $("#MinPrice").val(),

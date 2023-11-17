@@ -39,7 +39,14 @@
                             </div>
                         </td>
                         <td>
-                            <a href="@Url.Action("Advert","Advert",new{id=advert.Id})" class="fw-bold">@advert.Title</a>
+                            @if (ViewBag.UserID is not null)
+                            {
+                                <a href="@Url.Action("Advert","Advert",new{id=advert.Id})" class="fw-bold">@advert.Title</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("AdvertReadOnly","Advert",new{id=advert.Id})" class="fw-bold">@advert.Title</a>
+                            }
                         </td>
                         <td>@advert.Description</td>
                         <td>@advert.BuySellCategory.Name</td>

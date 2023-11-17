@@ -9,6 +9,7 @@ namespace AdvertisingPortal.Core.Services
         IEnumerable<Advert> GetAdverts(GetAdvertsParams getAdvertsParams);
 
         Advert GetAdvert(int id, string userId);
+        Advert GetAdvertReadOnly(int id);
 
         void Add(Advert advert);
 

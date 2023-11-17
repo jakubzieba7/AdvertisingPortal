@@ -17,11 +17,14 @@ namespace AdvertisingPortal.Core.Repositories
         public IEnumerable<Advert> GetAdverts(GetAdvertsParams getAdvertsParams)
         {
             var adverts = _context.Adverts.
-                Include(x => x.Images).
-                Include(x => x.Category).
-                Include(x => x.BuySellCategory).
-                Include(x => x.ItemServiceCategory).
-                Where(x => x.UserId == getAdvertsParams.UserId && x.IsFinished == getAdvertsParams.IsFinished);
+                    Include(x => x.Images).
+                    Include(x => x.Category).
+                    Include(x => x.BuySellCategory).
+                    Include(x => x.ItemServiceCategory).
+                    Where(x => x.IsFinished == getAdvertsParams.IsFinished);
+
+            if (getAdvertsParams.UserId is not null)
+                adverts = adverts.Where(x => x.UserId == getAdvertsParams.UserId);
 
             if (getAdvertsParams.BuySellCategoryId != 0)
                 adverts = adverts.Where(x => x.BuySellCategoryId == getAdvertsParams.BuySellCategoryId);
@@ -52,6 +55,13 @@ namespace AdvertisingPortal.Core.Repositories
             return _context.Adverts.
                 Include(x => x.Images).
                 Single(x => x.Id == id && x.UserId == userId);
+        }
+
+        public Advert GetAdvertReadOnly(int id)
+        {
+            return _context.Adverts.
+                Include(x => x.Images).
+                Single(x => x.Id == id);
         }
 
         public void Add(Advert advert)

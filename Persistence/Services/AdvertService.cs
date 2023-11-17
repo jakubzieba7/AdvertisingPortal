@@ -25,6 +25,11 @@ namespace AdvertisingPortal.Persistence.Services
             return _unitOfWork.Advert.GetAdvert(id, userId);
         }
 
+        public Advert GetAdvertReadOnly(int id)
+        {
+            return _unitOfWork.Advert.GetAdvertReadOnly(id);
+        }
+
         public void Add(Advert advert)
         {
             _unitOfWork.Advert.Add(advert);
