@@ -80,5 +80,10 @@ namespace AdvertisingPortal.Controllers
                 throw;
             }
         }
+
+        public IActionResult _AdvertImagesTabel() 
+        {
+            return ViewBag.UserId= User.GetUserId();
+        }
     }
 }
