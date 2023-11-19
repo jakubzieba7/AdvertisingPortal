@@ -1,0 +1,204 @@
+﻿@model IEnumerable<AdvertisingPortal.Core.Models.Domains.Advert>
+@{
+    ViewBag.Title = "Ogłoszenia na mapie";
+}
+
+@if (Model != null && Model.Any())
+{
+    var i = 0;
+    foreach (var advert in Model)
+    {
+
+        if (advert.Images.Any())
+        {
+            var idConc = string.Concat("injectedData", i);
+            var firstImage = advert.Images.FirstOrDefault();
+            var base64 = Convert.ToBase64String(firstImage.Data);
+            var img = String.Format("data:image/jpg;base64,{0}", base64);
+
+            <div id=@idConc data="@img">
+                @* <a><img src="@img" width="64" height="48" /></a> *@
+            </div>
+            i++;
+        }
+        else
+        {
+            var idConc = string.Concat("injectedData", i);
+            var img = "data:image/jpg;base64,null";
+
+            <div id=@idConc data="@img">
+                @* <a><img src="@img" width="64" height="48" /></a> *@
+            </div>
+            i++;
+        }
+
+    }
+}
+
+<title>@ViewBag.Title</title>
+
+<div id="map" style="height: 600px; width: 100%;"></div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })({
+            key: "@ViewBag.googleMapsApiKey",
+            v: "weekly",
+            // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+            // Add other bootstrap parameters as needed, using camel case.
+            language: "pl",
+            region: "PL",
+            authReferrerPolicy: "origin",
+        });
+
+        let map;
+        let marker;
+        let geocoder;
+        let responseDiv;
+        let response;
+
+
+        async function initMap() {
+
+            function showError(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        error = "User denied the request for Geolocation."
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        error = "Location information is unavailable."
+                        break;
+                    case error.TIMEOUT:
+                        error = "The request to get user location timed out."
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        error = "An unknown error occurred."
+                        break;
+                }
+            }
+
+            var latitude;
+            var longitude;
+
+            if ("geolocation" in navigator) {
+                // Prompt user for permission to access their location
+                navigator.geolocation.watchPosition(
+                    // Success callback function
+                    function (position) {
+
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+
+                        console.log(`Latitude: ${latitude}, longitude: ${longitude}`);
+                    },
+                    // Error callback function
+                    function (error) {
+                        console.error(showError);
+                        //console.error("Error getting user location:", error);
+                    }
+                );
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
+
+            // Request needed libraries.
+            const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+            map = new Map(document.getElementById("map"), {
+                //center: { lat: 50.03314208984375, lng: 19.931547164916992 },
+                center: { lat: latitude, lng: longitude },
+                zoom: 13,
+            });
+
+            var geocoder = new google.maps.Geocoder();
+            var infowindow = new google.maps.InfoWindow();
+
+            var modelZipCodes = '@Html.Raw(Json.Serialize(Model.Select(x => x.ZipCode)))';
+            var advertsZipCode = JSON.parse(modelZipCodes);
+
+            // var modelImageData = 'Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))';
+            // var advertsImageData = JSON.parse(modelImageData);
+
+            //var dataImg = function () { return 'Html.Raw(Json.Serialize(Model.Select(x=>x.Images).FirstOrDefault().Select(x=>x.Data)))'; }();
+            //var advertsDataImg = JSON.parse(dataImg);
+
+            var modelTitles = '@Html.Raw(Json.Serialize(Model.Select(x => x.Title)))';
+            var sanitizedModelTitles = modelTitles.replace(/[\u0000-\u0019]+/g, ""); // Replace control characters
+            var advertsTitle = JSON.parse(sanitizedModelTitles);
+
+            var modelIDs = '@Html.Raw(Json.Serialize(Model.Select(x => x.Id)))';
+            var advertsIDs = JSON.parse(modelIDs);
+
+            var modelDescriptions = '@Html.Raw(Json.Serialize(Model.Select(x => x.Description)))';
+            let sanitizedModelDesc = modelDescriptions.replace(/[\u0000-\u0019]+/g, ""); // Replace control characters
+            var advertsDescription = JSON.parse(sanitizedModelDesc);
+
+            var modelPrices = '@Html.Raw(Json.Serialize(Model.Select(x => x.Price)))';
+            var advertsPrices = JSON.parse(modelPrices);
+
+            let arrayMarkers = [];
+            let imgArray = [];
+            let rows = advertsZipCode.length;
+
+
+            for (let i = 0; i < rows; i++) {
+                arrayMarkers[i] = [];
+                imgArray[i] = [];
+                arrayMarkers[i][0] = advertsZipCode[i];
+                arrayMarkers[i][1] = advertsTitle[i];
+                arrayMarkers[i][3] = advertsIDs[i];
+                arrayMarkers[i][4] = advertsDescription[i];
+                arrayMarkers[i][5] = advertsPrices[i];
+
+                let text1 = "injectedData";
+                let text2 = i.toString();
+                let result = text1.concat(text2);
+                var injectedData = document.getElementById(result);
+                var InputOldStyle = injectedData.getAttribute("data");
+
+                // imgArray = btoa(String.fromCharCode.apply(null, advertsImageData));
+                // var img = "data:image/jpeg;base64," + imgArray[i];
+                // const blob = new Blob([img], { type: 'image/jpeg' });
+                // const imageUrl = URL.createObjectURL(blob);
+                // var imageURLSubstr = imageUrl.substring(imageUrl.indexOf(':') + 1);
+
+                //arrayMarkers[i][2] = imageURLSubstr;
+                //arrayMarkers[i][2] = img;
+                arrayMarkers[i][2] = InputOldStyle
+
+                console.log(arrayMarkers[i]);
+            }
+
+            for (let i = 0; i < arrayMarkers.length; i++) {
+
+                var addressToGeocode = arrayMarkers[i][0];
+
+                geocoder.geocode({ address: addressToGeocode }, function (results, status) {
+                    if (status === "OK") {
+                        var location = results[0].geometry.location;
+
+                        var marker = new google.maps.Marker({
+                            position: location,
+                            map: map,
+                            title: arrayMarkers[i][1],
+                        });
+
+                        google.maps.event.addListener(marker, "click", function () {
+                            //infowindow.setContent(results[0].formatted_address);
+                            infowindow.setContent('<img src="' + arrayMarkers[i][2] + '" width="64" height="48" /><br><br><a href=../Advert/AdvertReadOnly/' + arrayMarkers[i][3] + '>' + arrayMarkers[i][1] + '</a><br>' + arrayMarkers[i][4] + '<br><br><b>Cena:' + arrayMarkers[i][5] + '</b>');
+                            infowindow.open(map, marker);
+                        });
+
+                    } else {
+                        console.error("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+
+            }
+        }
+
+        initMap();
+    </script>
+}
