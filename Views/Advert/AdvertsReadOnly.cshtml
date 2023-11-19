@@ -1,0 +1,130 @@
+﻿@model AdvertisingPortal.Core.ViewModels.AdvertsViewModel
+
+@{
+    ViewData["Title"] = "Oferty";
+}
+
+<h1>Moje oferty</h1>
+
+<form id="filterForm">
+    <div class="row gx-3 gy-2 align-items-center">
+        <div class="col-sm-3">
+            @Html.TextBoxFor(x => x.FilterAdverts.GetAdvertsParams.Title, new { @class = "form-control mb-2", placeholder = "Tytuł", id = "Title" })
+        </div>
+        <div class="col-sm-3">
+            @Html.DropDownListFor(x => x.FilterAdverts.GetAdvertsParams.BuySellCategoryId,
+                     new SelectList(Model.BuySellCategories, "Id", "Name"),
+                     "-- wybierz kategorię --",
+                     new { @class = "form-control mb-2", id = "BuySellCategoryId" })
+        </div>
+        <div class="col-sm-3">
+            @Html.DropDownListFor(x => x.FilterAdverts.GetAdvertsParams.ItemServiceCategoryId,
+                     new SelectList(Model.ItemServiceCategories, "Id", "Name"),
+                     "-- wybierz kategorię --",
+                     new { @class = "form-control mb-2", id = "ItemServiceCategoryId" })
+        </div>
+        <div class="col-sm-3">
+            @Html.DropDownListFor(x => x.FilterAdverts.GetAdvertsParams.CategoryId,
+                     new SelectList(Model.Categories, "Id", "Name"),
+                     "-- wybierz kategorię --",
+                     new { @class = "form-control mb-2", id = "CategoryId" })
+        </div>
+        <div class="col-sm-3">
+            @Html.TextBoxFor(x => x.FilterAdverts.GetAdvertsParams.PriceMin,
+                     new { @class = "form-control mb-2", placeholder = "Cena min", id = "MinPrice" })
+        </div>
+        <div class="col-sm-3">
+            @Html.TextBoxFor(x => x.FilterAdverts.GetAdvertsParams.PriceMax,
+                     new { @class = "form-control mb-2", placeholder = Html.DisplayNameFor(m => m.FilterAdverts.GetAdvertsParams.PriceMax), id = "MaxPrice" })
+        </div>
+        <div class="col-sm-2">
+            <div class="form-check mb-2">
+                @Html.CheckBoxFor(x => x.FilterAdverts.GetAdvertsParams.IsFinished,
+                         new { @class = "form-check-label", id = "IsFinished" })
+
+                @Html.LabelFor(x => x.FilterAdverts.GetAdvertsParams.IsFinished)
+            </div>
+        </div>
+        @if (ViewBag.UserID is not null)
+        {
+            <div class="col-sm-2">
+                <div class="form-check mb-2">
+                    @Html.CheckBoxFor(x => x.FilterAdverts.GetAdvertsParams.IsPromoted,
+                             new { @class = "form-check-label", id = "IsPromoted" })
+
+                    @Html.LabelFor(x => x.FilterAdverts.GetAdvertsParams.IsPromoted)
+                </div>
+            </div>
+        }
+
+        <div class="col-sm-1">
+            <button id="advertsMapButton" class="btn btn-secondary mt-5 mb-5" onclick='window.location.href="@Url.Action("AdvertsReadOnlyMap","Advert", new{ getAdvertsParams = Model.FilterAdverts.GetAdvertsParams})"'>Mapa</button>
+
+        </div>
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mt-5 mb-5">Szukaj</button>
+        </div>
+    </div>
+</form>
+
+<div>
+    @await Html.PartialAsync("_AdvertsReadOnlyTable.cshtml", Model.Adverts)
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#filterForm').submit(function () {
+
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("Adverts", "Advert")",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        $('#advertsTable').html(data);
+                    },
+                    error: function (data) {
+                        alert(data.message);
+                    },
+                    dataType: 'html'
+                });
+
+                return false;
+            });
+
+            $('#advertsMapButton').click(function () {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "Advert/AdvertsMap",
+                        data: {
+                            PriceMin: $("#MinPrice").val(),
+                            PriceMax: $("#MaxPrice").val(),
+                            Title: $("#Title").val(),
+                            CategoryId: $("#CategoryId").val(),
+                            BuySellCategoryId: $("#BuySellCategoryId").val(),
+                            ItemServiceCategoryId: $("#ItemServiceCategoryId").val(),
+                            IsFinished: $("#IsFinished").val(),
+                            IsPromoted: $("#IsPromoted").val()
+                        },
+                        success: function (data) {
+                            //alert('Successfully received Data ');
+                            console.log('Successfully received Data');
+                        },
+                        error: function () {
+                            //alert('Failed to receive the Data');
+                            console.log('Failed to receive the Data ');
+                        }
+
+                    });
+
+                return false;
+            });
+        });
+
+    </script>
+}
