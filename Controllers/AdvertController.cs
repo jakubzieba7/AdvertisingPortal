@@ -54,6 +54,20 @@ namespace AdvertisingPortal.Controllers
             return View(vm);
         }
 
+        public IActionResult AdvertsReadOnly()
+        {
+            var vm = new AdvertsViewModel()
+            {
+                Adverts = _advertService.GetAdverts(_getAdvertsParams),
+                Categories = _categoryService.GetCategories(),
+                ItemServiceCategories = _categoryService.GetItemServiceCategories(),
+                BuySellCategories = _categoryService.GetBuySellCategories(),
+                FilterAdverts = new FilterAdverts()
+            };
+
+            return View(vm);
+        }
+
         public IActionResult Advert(int id = 0)
         {
             var userId = User.GetUserId();
@@ -140,6 +154,15 @@ namespace AdvertisingPortal.Controllers
         {
             //_getAdvertsParams = getAdvertsParams;
             _getAdvertsParams.UserId = User.GetUserId();
+            var adverts = _advertService.GetAdverts(_getAdvertsParams);
+            ViewBag.googleMapsApiKey = _config["GoogleMapsAPI:APIKey"];
+
+            return View(adverts);
+        }
+
+        public IActionResult AdvertsReadOnlyMap(GetAdvertsParams getAdvertsParams)
+        {
+            //_getAdvertsParams = getAdvertsParams;
             var adverts = _advertService.GetAdverts(_getAdvertsParams);
             ViewBag.googleMapsApiKey = _config["GoogleMapsAPI:APIKey"];
 

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using AdvertisingPortal.Persistence.Extensions
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -18,16 +20,27 @@
                 <ul class="nav nav-pills nav-fill justify-content-center">
                     <li class="nav-item dropdown">
                         <a class="nav-link active dropdown-toggle" data-bs-toggle="dropdown" href="@Url.Action("Adverts","Advert")" role="button" aria-expanded="false">Zaofertuj</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="@Url.Action("Adverts","Advert")">Moje oferty</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("Advert","Advert")">Dodaj nową</a></li>
-                        </ul>
+                        @if (User.GetUserId() is not null)
+                        {
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="@Url.Action("Adverts","Advert")">Moje oferty</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Advert","Advert")">Dodaj nową</a></li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item disabled" href="@Url.Action("Adverts","Advert")">Moje oferty</a></li>
+                                <li><a class="dropdown-item disabled" href="@Url.Action("Advert","Advert")">Dodaj nową</a></li>
+                            </ul>
+                        }
+                        
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="@Url.Action("Adverts","Advert")" role="button" aria-expanded="false">Kup</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="@Url.Action("Adverts","Advert")">Wszystkie oferty</a></li>
-                            <li><a class="dropdown-item" href="#">Historia ofert</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("AdvertsReadOnly","Advert")">Wszystkie oferty</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Historia ofert</a></li>
                         </ul>
                     </li>
                 </ul>
