@@ -4,6 +4,7 @@
 
     @{
         ViewData["Title"] = Model.Heading;
+        var Adverts = ViewBag.Adverts;
     }
 
     <i>@Model.Heading</i>
@@ -64,12 +65,19 @@
             </ul>
         }
 
+        <div class="mt-3">
 
+            @await Html.PartialAsync("_AdvertsUser", Adverts as IEnumerable<AdvertisingPortal.Core.Models.Domains.Advert>)
+        </div>
     </div>
 
 
     <div class="col-5 offset-lg-1">
         @await Html.PartialAsync("_AdvertImagesTable", Model.Advert.Images.Where(x => x.AdvertId == Model.Advert.Id))
+
+        <div>
+            <button class="btn btn-secondary mt-5 mb-5" onclick='window.location.href="@Url.Action("AdvertsReadOnly","Advert")"'>Wróć</button>
+        </div>
     </div>
 </div>
 

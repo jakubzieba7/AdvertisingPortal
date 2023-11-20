@@ -20,6 +20,11 @@ namespace AdvertisingPortal.Persistence.Services
             return _unitOfWork.Advert.GetAdverts(getAdvertsParams);
         }
 
+        public IEnumerable<Advert> GetAdvertsUser(int id)
+        {
+            return _unitOfWork.Advert.GetAdvertsUser(id);
+        }
+
         public Advert GetAdvert(int id, string userId)
         {
             return _unitOfWork.Advert.GetAdvert(id, userId);

@@ -50,6 +50,15 @@ namespace AdvertisingPortal.Core.Repositories
             return adverts.OrderBy(x => x.AdvertDate).ToList();
         }
 
+        public IEnumerable<Advert> GetAdvertsUser(int id)
+        {
+            var advertUserId = _context.Adverts.Where(x => x.Id == id).Select(x => x.UserId).ToString();
+            var adverts = _context.Adverts.Where(x => x.UserId == advertUserId && x.Id != id).ToList();
+
+            return adverts;
+        }
+
+
         public Advert GetAdvert(int id, string userId)
         {
             return _context.Adverts.

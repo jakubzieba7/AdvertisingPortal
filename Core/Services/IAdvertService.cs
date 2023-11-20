@@ -7,6 +7,7 @@ namespace AdvertisingPortal.Core.Services
     public interface IAdvertService
     {
         IEnumerable<Advert> GetAdverts(GetAdvertsParams getAdvertsParams);
+        IEnumerable<Advert> GetAdvertsUser(int id);
 
         Advert GetAdvert(int id, string userId);
         Advert GetAdvertReadOnly(int id);
