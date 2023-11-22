@@ -6,29 +6,32 @@
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            @foreach (var advert in Model)
+        @foreach (var advert in Model)
+        {
+
+            if (advert.Images.Any())
             {
 
-                if (advert.Images.Any())
-                {
+                var firstImage = advert.Images.FirstOrDefault();
+                var base64 = Convert.ToBase64String(firstImage.Data);
+                var img = String.Format("data:image/jpg;base64,{0}", base64);
 
-                    var firstImage = advert.Images.FirstOrDefault();
-                    var base64 = Convert.ToBase64String(firstImage.Data);
-                    var img = String.Format("data:image/jpg;base64,{0}", base64);
+                <a><img src="@img" class="d-block w-100" alt="..." /></a>
 
-                    <a><img src="@img" class="d-block w-100" alt="..." /></a>
 
-                }
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>@advert.Title</h5>
-                    <p>@advert.Description</p>
+                <div class="carousel-inner">
+                    <div class="carousel-item">
+
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>@advert.Title</h5>
+                            <p>@advert.Description</p>
+                        </div>
+                    </div>
                 </div>
             }
+        }
+    
 
-        </div>
-    </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>

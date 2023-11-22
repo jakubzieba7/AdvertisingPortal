@@ -4,7 +4,6 @@
 
     @{
         ViewData["Title"] = Model.Heading;
-        var Adverts = ViewBag.Adverts;
     }
 
     <i>@Model.Heading</i>
@@ -67,7 +66,7 @@
 
         <div class="mt-3">
 
-            @await Html.PartialAsync("_AdvertsUser", Adverts as IEnumerable<AdvertisingPortal.Core.Models.Domains.Advert>)
+            @await Html.PartialAsync("_AdvertsUser", Model.UserAdverts)
         </div>
     </div>
 

@@ -87,14 +87,11 @@ namespace AdvertisingPortal.Controllers
 
         public IActionResult AdvertReadOnly(int id)
         {
-            ViewBag.Adverts = _advertService.GetAdvertsUser(id);
-            
-            var advert = _advertService.GetAdvertReadOnly(id);
-
             var vm = new AdvertViewModel()
             {
+                UserAdverts = _advertService.GetAdvertsUser(id),
                 Heading = $"Oferta nr {id}",
-                Advert = advert,
+                Advert = _advertService.GetAdvertReadOnly(id),
                 Categories = _categoryService.GetCategories(),
                 BuySellCategories = _categoryService.GetBuySellCategories(),
                 ItemServiceCategories = _categoryService.GetItemServiceCategories()

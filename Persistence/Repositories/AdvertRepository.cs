@@ -52,8 +52,10 @@ namespace AdvertisingPortal.Core.Repositories
 
         public IEnumerable<Advert> GetAdvertsUser(int id)
         {
-            var advertUserId = _context.Adverts.Where(x => x.Id == id).Select(x => x.UserId).ToString();
-            var adverts = _context.Adverts.Where(x => x.UserId == advertUserId && x.Id != id).ToList();
+            var advertUserId = _context.Adverts.Where(x => x.Id == id).Select(x=>x.UserId).ToList();
+            var adverts = _context.Adverts.
+                Include(x => x.Images).
+                Where(x => x.UserId == advertUserId.FirstOrDefault() && x.Id != id).ToList();
 
             return adverts;
         }
